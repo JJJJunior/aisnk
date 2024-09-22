@@ -1,0 +1,116 @@
+import React from "react";
+import { prisma } from "@/prisma/db";
+import { ImageType, ProductType } from "../lib/types";
+import Image from "next/image";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+const NewProductsInRow = async () => {
+  const newProducts = await prisma.product.findMany({
+    where: {
+      tags: "new",
+    },
+    select: {
+      images: {
+        orderBy: {
+          order_index: "asc",
+        },
+      },
+      title: true,
+      alias_title: true,
+      price: true,
+      discount: true,
+      id: true,
+      tags: true,
+      category: true,
+    },
+    orderBy: { created_at: "desc" },
+    take: 5,
+  });
+  //   console.log(newProducts);
+
+  const websetting = await prisma.settings.findUnique({
+    where: {
+      key: "websettings",
+    },
+  });
+
+  //显示伪造数据
+  const ImageUrl = (images: ImageType[]) => {
+    let url;
+    if (websetting?.is_fake === 1) {
+      url = `/api/images?file=${images[images.length - 1].url}`;
+    } else {
+      url = `/api/images?file=${images[0].url}`;
+    }
+    return url;
+  };
+  //显示伪造数据
+  const ProductShowTitle = (product: ProductType) => {
+    let showTitle;
+    if (websetting?.is_fake === 1) {
+      if (product.alias_title && product.alias_title.length > 0) {
+        showTitle = product.alias_title;
+      } else {
+        showTitle =
+          product.title &&
+          product.title
+            .split(" ")
+            .slice(product.title.split(" ").length - 3, product.title.split(" ").length)
+            .join(" ");
+      }
+    } else {
+      showTitle = product.title;
+    }
+    return showTitle;
+  };
+
+  const handleUrl = (product: ProductType) => {
+    // 替换所有非字母、数字或空格的字符为空格
+    const formattedTitle = (product?.title || "").toLowerCase().replace(/[^a-zA-Z0-9\s]/g, " ");
+    const spaceCount = (formattedTitle.match(/\s+/g) || []).length;
+    let result;
+    if (spaceCount === 0) {
+      result = formattedTitle;
+    } else {
+      result = formattedTitle.split(" ").join("-");
+    }
+    return result;
+  };
+
+  return (
+    <div className="mx-12 mt-12">
+      <div className="flex justify-between items-center">
+        <div className="text-2xl font-semibold text-gray-600 mb-6">New Releases</div>
+        <Link
+          href="/web/collections/all"
+          className="font-semibold flex gap-2 justify-center items-center hover:text-gray-400 hover:text-xl"
+        >
+          <div className="underline">See More</div>
+          <ChevronRight size={20} />
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
+        {newProducts &&
+          newProducts.length > 0 &&
+          newProducts.map((product) => (
+            <div key={product.id} className="relative shadow-md rounded-lg mb-2 hover:border-2">
+              <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}`}>
+                <div className="absolute bg-green-600 px-4 text-white rounded-md ml-2 mt-2">{product.tags}</div>
+                <div className="flex justify-center items-center">
+                  <Image src={ImageUrl(product.images)} alt={String(product.id)} width={300} height={400} />
+                </div>
+                <div className="flex flex-col justify-center items-center gap-4">
+                  <div className="text-sm font-semibold text-gray-400 text-center w-[200px]">
+                    {ProductShowTitle(product as ProductType)}
+                  </div>
+                  <div className="text-sm font-semibold text-gray-600 mb-6">{product.category}</div>
+                </div>
+              </Link>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+};
+
+export default NewProductsInRow;

@@ -1,0 +1,284 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  role       String?
+
+  @@map("admin_users")
+}
+
+model Log {
+  id           Int      @id @default(autoincrement())
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now())
+  user         String?
+  type         String?
+  info         String?
+  ip           String?
+  country_name String?
+  city         String?
+
+  @@map("admin_logs")
+}
+
+model Parent {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  collections Collection[]
+
+  @@map("admin_parents")
+}
+
+model Collection {
+  id                Int                 @id @default(autoincrement())
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @default(now())
+  title             String
+  order_index       Int
+  description       String              @db.Text
+  alias_title       String?
+  alias_description String?             @db.Text
+  status            String
+  parentId          Int?
+  parent            Parent?             @relation(fields: [parentId], references: [id])
+  images            Image[]
+  products          ProductCollection[]
+
+  @@index([parentId], map: "admin_collections_parentId_fkey")
+  @@map("admin_collections")
+}
+
+model CollectionStatus {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status     String
+
+  @@map("admin_collection_statuses")
+}
+
+model ProductCollection {
+  collectionId Int
+  productId    Int
+  assignedAt   DateTime   @default(now())
+  assignedBy   String?
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  product      Product    @relation(fields: [productId], references: [id])
+
+  @@id([productId, collectionId])
+  @@index([collectionId], map: "admin_product_collection_collectionId_fkey")
+  @@map("admin_product_collection")
+}
+
+model Product {
+  id                Int                 @id @default(autoincrement())
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @default(now())
+  title             String
+  description       String              @db.Text
+  code              String
+  category          String
+  tags              String?
+  sizes             String?
+  colors            String?
+  cost              Float?
+  shipping          Float?
+  commission        Float?
+  expense           Float?
+  price             Float?
+  size_image        String?
+  stock             Int?
+  status            String?
+  discount          Float?
+  alias_title       String?
+  alias_description String?             @db.Text
+  is_recommended    Int?
+  cart              Cart[]
+  images            Image[]
+  collections       ProductCollection[]
+  ProductsOnOder    ProductsOnOder[]
+
+  @@map("admin_product")
+}
+
+model ProductStatus {
+  id         Int      @id @default(autoincrement())
+  status     String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("admin_product_status")
+}
+
+model Image {
+  id           String      @id
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @default(now())
+  url          String
+  order_index  Int?
+  collectionId Int?
+  productId    Int?
+  Collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  Product      Product?    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([collectionId], map: "admin_images_collectionId_fkey")
+  @@index([productId], map: "admin_images_productId_fkey")
+  @@map("admin_images")
+}
+
+model Customer {
+  id           String    @id
+  username     String? //clerk
+  email_stripe String? //stripe
+  email        String? //clerk
+  firstName    String? //clerk
+  lastName     String? //clerk
+  name         String? //stripe
+  createdAt    DateTime?
+  lastSignInAt DateTime?
+  phone        String? //stripe
+  cart         Cart[]
+  referralCode String?   @unique // 用户的推荐代码
+  referredById String? // 推荐人的ID
+  isRef        Int? //是否是推荐人
+  Order        Order[]
+
+  @@map("admin_customers")
+}
+
+model Cart {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  customerId String?
+  quantity   Int?
+  color      String?
+  size       String?
+  productId  Int?
+  product    Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([productId], map: "admin_carts_productId_fkey")
+  @@map("admin_carts")
+}
+
+model Visitor {
+  id            Int       @id @default(autoincrement()) // 自动递增的主键
+  visitorId     String    @unique // 唯一的访客 ID
+  ip            String    @db.VarChar(45) // 访客的 IP 地址（支持 IPv4 和 IPv6）
+  userAgent     String? // 记录用户的浏览器信息
+  deviceType    String? // 设备类型（如：手机、桌面、平板）
+  os            String? // 操作系统类型
+  browser       String? // 浏览器类型
+  visitCount    Int       @default(1) // 记录该访客访问的次数
+  lastVisit     DateTime? // 记录最后一次访问时间
+  createdAt     DateTime  @default(now()) // 记录首次访问时间
+  continentName String? // 国际区域
+  countryName   String? // 国家
+  stateProv     String? // 省份
+  city          String? // 城市
+
+  @@map("admin_visitors")
+}
+
+model Order {
+  id              String           @id @default(uuid())
+  products        ProductsOnOder[]
+  shippingAddress ShippingAddress?
+  shippingRate    String? // stripe上运费模板
+  totalAmount     Float?
+  partner         String? //合作商名称
+  commission      Float? //自动计算返佣金额
+  confirmed       Float? //确认返佣金额
+  commissionPaid  Int? // 确认是否返佣
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now())
+  customer        Customer?        @relation(fields: [customerId], references: [id])
+  customerId      String?
+  status          String?
+
+  @@map("admin_orders")
+}
+
+model ProductsOnOder {
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      Int
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  title          String?
+  color          String?
+  size           String?
+  currency       String?
+  amountDiscount Float?
+  amountSubtotal Float?
+  amountTax      Float?
+  amountTotal    Float?
+  quantity       Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
+  @@id([productId, orderId])
+  @@map("admin_product_order")
+}
+
+model ShippingAddress {
+  id           Int     @id @default(autoincrement())
+  streetNumber String?
+  streetName   String?
+  city         String?
+  state        String?
+  postalCode   String?
+  country      String?
+  order        Order   @relation(fields: [orderId], references: [id])
+  orderId      String  @unique
+
+  @@map("admin_shipping_address")
+}
+
+model ExchangeAndShipping {
+  id                      Int     @id @default(autoincrement())
+  code                    String?
+  currency                String?
+  courtyName              String?
+  englishCoutryName       String?
+  currencyCode            String?
+  exchangeRate            Float?
+  shippingCodeInStripe    String?
+  shippingCodeDesInStripe String?
+  paymentTypeInStripe     String?
+  allowedCountries        String?
+
+  @@map("admin_exchange_and_shipping")
+}
+
+model QA {
+  id         Int      @id @default(autoincrement())
+  title      String?
+  question   String?
+  answer     String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("admin_qas")
+}
+
+model Settings {
+  id         Int      @id @default(autoincrement())
+  key        String   @unique
+  is_fake    Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("admin_settings")
+}
