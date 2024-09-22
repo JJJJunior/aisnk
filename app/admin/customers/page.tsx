@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Table, Button, Popconfirm, message } from "antd";
-import { CustomerType, OrderType } from "@/app/lib/types";
+import { CustomerType } from "@/app/lib/types";
 import axios from "axios";
 import { TransactionOutlined } from "@ant-design/icons";
 
@@ -31,9 +31,6 @@ const page = () => {
       // console.error(err);
     }
   };
-  useEffect(() => {
-    getOrders();
-  }, []);
 
   //在nextjs中是通过url路径进行缓存的，当请求的路径没有发生改变，都是默认从缓存获取。
   const getCustomers = async () => {
@@ -63,6 +60,7 @@ const page = () => {
 
   useEffect(() => {
     getCustomers();
+    getOrders();
   }, []);
 
   // console.log(counts);

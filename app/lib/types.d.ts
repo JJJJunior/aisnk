@@ -131,11 +131,11 @@ export interface ProductsOnOderType {
   product: ProductType;
   productId: number;
   order: OrderType;
-  orderId: String;
-  title: String;
-  color: String;
-  size: String;
-  currency: String;
+  orderId: string;
+  title: string;
+  color: string;
+  size: string;
+  currency: string;
   amountDiscount: number;
   amountSubtotal: number;
   amountTax: number;

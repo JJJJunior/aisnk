@@ -32,7 +32,8 @@ const ImageUrl = async (images: ImageType[]) => {
 const Collections: React.FC<CollectionsProps> = async ({ params }) => {
   const getCollectionById = async (title: string, id: number, skip: number, take: number) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/web/collections/${title}/${id}?skip=${skip}&take=${take}`);
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await axios.get(`${baseURL}/api/web/collections/${title}/${id}?skip=${skip}&take=${take}`);
       if (res.status === 200) {
         return res.data;
       }
