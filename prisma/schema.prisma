@@ -177,7 +177,7 @@ model Visitor {
   id            Int       @id @default(autoincrement()) // 自动递增的主键
   visitorId     String    @unique // 唯一的访客 ID
   ip            String    @db.VarChar(45) // 访客的 IP 地址（支持 IPv4 和 IPv6）
-  userAgent     String? // 记录用户的浏览器信息
+  userAgent     String?   @db.Text // 记录用户的浏览器信息
   deviceType    String? // 设备类型（如：手机、桌面、平板）
   os            String? // 操作系统类型
   browser       String? // 浏览器类型
