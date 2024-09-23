@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CustomerType,
   ExchangeAndShippingType,
@@ -9,10 +9,14 @@ import {
   ShippingAddressType,
 } from "@/app/lib/types";
 import axios from "axios";
-import type { TableColumnsType } from "antd";
-import { Table, Select, message, Tag, Button, Popconfirm } from "antd";
+import type { InputRef, TableColumnsType, TableColumnType } from "antd";
+import { Table, Select, message, Tag, Button, Popconfirm, Input, Space } from "antd";
 import Image from "next/image";
 import type { PopconfirmProps } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import type { FilterDropdownProps } from "antd/es/table/interface";
+import Highlighter from "react-highlight-words";
+import { formatToLocalTime } from "@/app/lib/localDate";
 
 interface OrderStatusType {
   id: string;
@@ -51,11 +55,96 @@ interface BTNLoadingType {
   status: boolean;
 }
 
+type DataIndex = keyof OrderType;
+
 const page = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderStatus, setOrderStatus] = useState<OrderStatusType[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
 
+  const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps["confirm"], dataIndex: DataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<OrderType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
+    onFilter: (value, record) =>
+      (record[dataIndex]?.toString() ?? "")
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
   const getOrders = async () => {
     try {
       const res = await axios.get("/api/admin/orders");
@@ -140,12 +229,21 @@ const page = () => {
 
   const columns = [
     {
+      title: "搜索单号",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchProps("id"),
+      render: (id: string) => {
+        return <div className="w-[100px] text-xs">{id}</div>;
+      },
+    },
+    {
       title: "联系方式",
       dataIndex: "customer",
       key: "customer",
       render: (customer: CustomerType) => {
         return (
-          <div>
+          <div className="text-xs w-[150px]">
             <div>
               {customer.name
                 ? customer.name
@@ -165,7 +263,7 @@ const page = () => {
       key: "shippingAddress",
       render: (shippingAddress: ShippingAddressType) => {
         return (
-          <div>
+          <div className="w-[300px]">
             <div className="text-xs font-semibold flex gap-2">
               <p>Country:</p>
               <p className="text-red-500">{shippingAddress.country}</p>
@@ -289,6 +387,7 @@ const page = () => {
       title: "下单时间",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (createdAt: Date) => <div className="text-xs w-[80px]">{formatToLocalTime(createdAt)}</div>,
     },
   ];
 
@@ -310,7 +409,7 @@ const page = () => {
         dataIndex: "product",
         render: (product: ProductType) => (
           <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER}${product?.images && product?.images[0].url}`}
+            src={`/api/images?file=${product?.images && product?.images[0].url}`}
             width={60}
             height={60}
             alt="pic"

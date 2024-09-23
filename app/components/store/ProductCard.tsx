@@ -92,17 +92,19 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
   // console.log(product);
   return (
     <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}?from=${pathname}`}>
-      <div className="w-[200px] md:w-[240px] p-2 flex flex-col justify-between">
+      <div className="w-[220px] p-2 flex flex-col justify-between">
         <div className="relative">
-          {loading && <Skeleton className="h-[300px] w-[240px] rounded-lg bg-white" />}
+          {loading && <Skeleton className="h-[200px] rounded-lg bg-white" />}
           <Image
             src={ImageUrl(product?.images as [])}
             width={0}
             height={0}
-            sizes="100vw"
-            alt="pic"
+            sizes="100vw" // Make the image display full width
+            alt="SA"
             priority
-            onLoadingComplete={() => setLoading(false)} // 图片加载完成后隐藏骨架屏
+            onLoadingComplete={() => {
+              setLoading(false);
+            }} // 图片加载完成后隐藏骨架屏
             className="w-full h-auto transform hover:scale-100 md:hover:scale-110 hover:rotate-3 transition-transform duration-300 ease-in-out hover:shadow-xl"
           />
           {/* {product.discount && product.discount < 1 && (
@@ -138,7 +140,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
             ) : (
               <span className="text-gray-600">$ {price}</span>
             )}
-            <span className="text-gray-600 text-xs">{exchangeRateAndShipping?.currencyCode}</span>
+            <span className="text-gray-400 text-xs">{exchangeRateAndShipping?.currencyCode}</span>
           </div>
         </div>
       </div>

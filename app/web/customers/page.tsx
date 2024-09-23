@@ -5,15 +5,29 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { CustomerType, OrderType } from "@/app/lib/types";
+import { OrderType } from "@/app/lib/types";
 import QrcodePage from "@/app/components/Qrcode";
 import Image from "next/image";
+import { formatToLocalTime } from "@/app/lib/localDate";
+import { OrderStateZHEN } from "@/app/lib/orders";
+
+interface CustomerCheckType {
+  id: string;
+  customerId: string;
+  email: string;
+  isRef: number;
+  refCount: number;
+  referralCode: string;
+  commission: number;
+  username: string;
+  fullname: string;
+  subCustomersTotalOrders: OrderType[];
+}
 
 const Customers = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [customer, setCustomer] = useState<CustomerType | null>(null);
-  const [referralsCount, setReferralsCount] = useState(0);
+  const [customer, setCustomer] = useState<CustomerCheckType | null>(null);
   const [myOrders, setMyOrders] = useState<OrderType[]>([]);
   const { userId } = useAuth();
 
@@ -21,7 +35,6 @@ const Customers = () => {
     if (userId) {
       setLoading(false);
       getCustomer();
-      getReferesCount();
     }
   }, [userId]);
 
@@ -36,6 +49,7 @@ const Customers = () => {
       //   console.log(err);
     }
   };
+  console.log(customer);
 
   const getMyOrders = async () => {
     if (!userId) return;
@@ -48,22 +62,9 @@ const Customers = () => {
       //   console.log(err);
     }
   };
-  console.log(myOrders);
   useEffect(() => {
     getMyOrders();
   }, []);
-
-  const getReferesCount = async () => {
-    try {
-      if (!useId) return;
-      const res = await axios.get(`/api/web/customers/${useId}/referrals/`);
-      if (res.status === 200) {
-        setReferralsCount(res.data.data);
-      }
-    } catch (err) {
-      //   console.log(err);
-    }
-  };
 
   if (!useId) {
     return (
@@ -90,7 +91,10 @@ const Customers = () => {
                   <div className="font-semibold text-gray-600">Order ID:</div>
                   <div>{order.id}</div>
                   <div className="font-semibold text-gray-600">Total：$ {order.totalAmount}</div>
-                  <div className="font-semibold text-gray-600">Time: {order.createdAt}/</div>
+                  <div className="font-semibold text-gray-600">Time: {formatToLocalTime(order.createdAt)}</div>
+                  <div className="font-semibold text-green-500">
+                    Status: {OrderStateZHEN(order.status ? order.status : "")}
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4">
                   {order.products &&
@@ -101,7 +105,7 @@ const Customers = () => {
                           alt="pic"
                           width={50}
                           height={50}
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER}${
+                          src={`/api/images?file=${
                             productOnOrder.product.images && productOnOrder.product.images[0].url
                           }`}
                         />
@@ -121,45 +125,68 @@ const Customers = () => {
         </div>
       </div>
       {customer?.isRef && (
-        <div className="flex flex-col lg:flex lg:flex-row gap-12 h-[400]px p-4 shadow-lg rounded-lg my-6">
-          <div>
-            <div className="flex flex-col items-center gap-6">
-              <div className="w-full md:w-[600px] text-sm md:text-xl">
-                <span className="text-md font-semibold text-blue-600">Congratulations on becoming a partner!</span>
-                <p className="text-sm">
-                  Below is your promotional QR code and website referral link. Both the QR code and the referral link
-                  serve the same purpose.Users invited through your referral link or QR code will earn you a percentage
-                  of their transactions, which will be credited to your account. You can withdraw these earnings or use
-                  them as discounts on future purchases.
-                </p>
+        <div>
+          <div className="flex flex-col lg:flex lg:flex-row gap-12 h-[400]px p-4 rounded-lg my-6">
+            <div>
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-full md:w-[600px] text-sm md:text-xl">
+                  <span className="text-md font-semibold text-blue-600">Congratulations on becoming a partner!</span>
+                  <p className="text-sm">
+                    Below is your promotional QR code and website referral link. Both the QR code and the referral link
+                    serve the same purpose.Users invited through your referral link or QR code will earn you a
+                    percentage of their transactions, which will be credited to your account. You can withdraw these
+                    earnings or use them as discounts on future purchases.
+                  </p>
+                </div>
+                <div className="flex flex-col">
+                  <h1>Promotional QR Code:</h1>
+                  <QrcodePage
+                    url={`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${customer.referralCode}`}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <h1>Promotional URL:</h1>
+                  <div className="text-green-600">{`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${
+                    customer.referralCode
+                  }`}</div>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <h1>Promotional QR Code:</h1>
-                <QrcodePage
-                  url={`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${customer.referralCode}`}
-                />
+            </div>
+            <div className="grid md:grid-cols-2 flex-1 gap-6">
+              <div className="text-gray-600 h-[200px] p-4 font-semibold shadow-lg rounded-lg flex flex-col justify-center items-center">
+                <div className="text-3xl"> {customer.refCount}</div>
+                <p className="text-xs">Total Recommended</p>
               </div>
-              <div className="flex flex-col">
-                <h1>Promotional URL:</h1>
-                <div className="text-green-600">{`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${
-                  customer.referralCode
-                }`}</div>
+              <div className="text-gray-600 h-[200px] p-4 font-semibold shadow-lg rounded-lg flex flex-col justify-center items-center">
+                <div className="text-3xl"> $ {customer.commission} </div>
+                <p className="text-xs">Commission Earned</p>
               </div>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 flex-1 gap-6">
-            <div className="text-gray-600 h-[200px] p-4 font-semibold shadow-lg rounded-lg flex flex-col justify-center items-center">
-              <div className="text-3xl"> {referralsCount}</div>
-              <p className="text-xs">Total Recommended</p>
-            </div>
-            <div className="text-gray-600 h-[200px] p-4 font-semibold shadow-lg rounded-lg flex flex-col justify-center items-center">
-              <div className="text-3xl"> $ 0</div>
-              <p className="text-xs">Orders Facilitated</p>
-            </div>
-            <div className="text-gray-600 h-[200px] p-4 font-semibold shadow-lg rounded-lg flex flex-col justify-center items-center">
-              <div className="text-3xl"> $ 0</div>
-              <p className="text-xs">Commission Earned</p>
-            </div>
+          <div className="shadow-lg">
+            {customer.subCustomersTotalOrders &&
+              customer.subCustomersTotalOrders.length > 0 &&
+              customer.subCustomersTotalOrders.map((order) => (
+                <div>
+                  <div className="flex gap-4">
+                    <div>Order ID: {order.id}</div>
+                    <div>Total：$ {order.totalAmount}</div>
+                    <div>Time: {formatToLocalTime(order.createdAt)}</div>
+                    <div>Status: {OrderStateZHEN(order.status ? order.status : "")}</div>
+                  </div>
+                  <div>
+                    {order.products &&
+                      order.products.length > 0 &&
+                      order.products.map((productOnOrder, index) => (
+                        <div key={index}>
+                          <div>Title: {productOnOrder.title}</div>
+                          <div>Quantity: {productOnOrder.quantity}</div>
+                          <div>Color: {productOnOrder.color}</div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       )}

@@ -15,6 +15,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
         id: true,
         status: true,
         totalAmount: true,
+        createdAt: true,
         products: {
           include: {
             product: {

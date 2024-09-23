@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/prisma/db";
+import { generateOrderId } from "@/app/lib/orders";
 
 //   创建 Stripe 实例
 export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
@@ -86,6 +87,7 @@ export const POST = async (req: NextRequest) => {
       //save order
       await prisma.order.create({
         data: {
+          id: generateOrderId(), //生成订单id
           products: {
             create: newOrder.products.map((item) => ({
               product: {

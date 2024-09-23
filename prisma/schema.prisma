@@ -207,6 +207,7 @@ model Order {
   customer        Customer?        @relation(fields: [customerId], references: [id])
   customerId      String?
   status          String?
+  tracking        String? //物流单号
 
   @@map("admin_orders")
 }

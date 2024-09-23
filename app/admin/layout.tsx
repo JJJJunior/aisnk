@@ -60,7 +60,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     try {
       await axios.get("/api/admin/logout");
-      router.push("/yuanbao/login");
+      router.push("/dashboard/login");
     } catch (err) {
       // console.log(err);
     }
