@@ -18,7 +18,8 @@ const nextConfig = {
     // 忽略 ESLint 错误
     ignoreDuringBuilds: true,
   },
-  output: "standalone",
+  // output: "standalone",
+  cacheMaxMemorySize: 0, // disable default in-memory caching
 };
 
 export default nextConfig;
