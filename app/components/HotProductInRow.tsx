@@ -101,7 +101,7 @@ const HotProductsInRow = async () => {
                   <Image src={ImageUrl(product.images)} alt={String(product.id)} width={300} height={400} />
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4">
-                  <div className="text-sm font-semibold text-gray-400 text-center w-[200px]">
+                  <div className="text-xs font-semibold text-gray-400 text-center w-[180px]">
                     {ProductShowTitle(product as ProductType)}
                   </div>
                   <div className="text-sm font-semibold text-gray-600 mb-6">{product.category}</div>

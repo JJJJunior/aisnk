@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
         </button>
 
         {/* Full Navbar (visible on medium and large screens) */}
-        <nav className="hidden list-none gap-8 text-base font-semibold text-gray-600 md:flex md:gap-6 md:text-sm">
+        <nav className="hidden list-none gap-8 lg:text-md xl:text-xl xl:gap-12 text-base font-semibold text-gray-600 md:flex md:gap-6 md:text-sm">
           {/* 增加互斥功能 */}
           <MenuInNavbar
             isFake={isFake}
