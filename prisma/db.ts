@@ -15,4 +15,8 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(() => {
+    prisma.$disconnect();
+    console.log("db已断开...");
   });

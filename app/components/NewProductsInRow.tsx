@@ -24,7 +24,7 @@ const NewProductsInRow = async () => {
       category: true,
     },
     orderBy: { created_at: "desc" },
-    take: 5,
+    take: 6,
   });
   //   console.log(newProducts);
 
@@ -78,7 +78,7 @@ const NewProductsInRow = async () => {
   };
 
   return (
-    <div className="mx-12 mt-12">
+    <div className="mx-6 md:mx-12 mt-12">
       <div className="flex justify-between items-center">
         <div className="text-2xl font-semibold text-gray-600 mb-6">New Releases</div>
         <Link
@@ -89,7 +89,7 @@ const NewProductsInRow = async () => {
           <ChevronRight size={20} />
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {newProducts &&
           newProducts.length > 0 &&
           newProducts.map((product) => (

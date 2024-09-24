@@ -19,7 +19,7 @@ const TopCollection = async () => {
     },
   });
   return (
-    <div className="mx-12 mt-12">
+    <div className="mx-12 mt-12 hidden md:block">
       <div className="flex justify-between items-center">
         <div className="text-2xl font-semibold text-gray-600 mb-6">Top Collection</div>
       </div>

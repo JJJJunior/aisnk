@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Image as AntImage } from "antd";
 import { ImageType } from "@/app/lib/types";
 import axios from "axios";
-import Loader from "../Loader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface GalleryProps {
   images: ImageType[];
@@ -39,29 +39,35 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
     }
   }, [isFake]);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="flex flex-col gap-3 lg:flex-1 h-auto">
-      <div className="md:w-[500px]">
-        <AntImage src={`/api/images?file=${mainImage}`} placeholder={true} />
-      </div>
-      <div className="flex gap-2 md:w-[500px] overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
-        {testImages.length > 0 &&
-          testImages.map((item, index) => (
-            <Image
-              key={index}
-              src={`/api/images?file=${item.url}`}
-              alt="product"
-              width={100}
-              height={100}
-              className={`w-20 h-20 object-cover cursor-pointer ${
-                mainImage === item.url ? "border-2 border-black" : ""
-              }`}
-              onClick={() => setMainImage(item.url)}
-            />
-          ))}
-      </div>
+      {loading ? (
+        <Skeleton className="h-[500px] w-full rounded-xl" />
+      ) : (
+        <div className="md:w-[500px]">
+          <AntImage src={`/api/images?file=${mainImage}`} placeholder={true} />
+        </div>
+      )}
+      {loading ? (
+        <Skeleton className="h-[120px] w-full rounded-xl" />
+      ) : (
+        <div className="flex gap-2 md:w-[500px] overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
+          {testImages.length > 0 &&
+            testImages.map((item, index) => (
+              <Image
+                key={index}
+                src={`/api/images?file=${item.url}`}
+                alt="product"
+                width={100}
+                height={100}
+                className={`w-20 h-20 object-cover cursor-pointer ${
+                  mainImage === item.url ? "border-2 border-black" : ""
+                }`}
+                onClick={() => setMainImage(item.url)}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

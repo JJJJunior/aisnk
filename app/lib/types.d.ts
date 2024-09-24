@@ -15,8 +15,8 @@ export interface LogType {
 }
 
 export interface ParentType {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
   collections?: CollectionType[];
 }
 

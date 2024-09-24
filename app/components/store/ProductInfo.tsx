@@ -4,7 +4,7 @@ import { ProductType } from "@/app/lib/types";
 import useCart from "@/app/lib/hooks/useCart";
 import { ExchangeAndShipping } from "@prisma/client";
 import axios from "axios";
-import Loader from "../Loader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductInfoProps {
   productInfo: ProductType | undefined;
@@ -99,98 +99,102 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
     return showDisc;
   };
   // console.log(productInfo);
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="flex flex-col gap-4 lg:flex-1">
-      <div className="flex justify-between items-center">
-        <p className="text-2xl font-semibold">{productInfo && ProductShowTitle(productInfo)}</p>
-      </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-gray-600 font-semibold">Category：</p>
-        <p className="text-sm text-gray-600">{productInfo?.category}</p>
-      </div>
-      <div className="text-xl font-semibold text-gray-800">
-        {productInfo && price && productInfo.discount !== 1 ? (
-          <div className="flex gap-2">
-            <span className="line-through text-gray-400">$ {price}</span>
-            <span className="text-red-600">{discount}</span>
+      {loading ? (
+        <Skeleton className="h-[640px] w-full rounded-xl" />
+      ) : (
+        <>
+          <div className="flex justify-between items-center">
+            <p className="text-2xl font-semibold">{productInfo && ProductShowTitle(productInfo)}</p>
           </div>
-        ) : (
-          <span>$ {discount}</span>
-        )}
-        <span className="mx-2">{current?.currencyCode}</span>
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-gray-600 font-semibold">Description:</p>
-        <p className="text-sm text-gray-600">{productInfo && ProductShowDisc(productInfo)}</p>
-      </div>
-      {productInfo?.colors
-        ? productInfo.colors.split(",").length > 0 && (
-            <div className="flex flex-col gap-2">
-              <div className="text-gray-600 font-semibold">Colors:</div>
-              <div className="flex gap-2 flex-wrap">
-                {productInfo.colors.split(",").map((color, index) => (
-                  <div
-                    onClick={() => setSelectedColor(color)}
-                    key={index}
-                    className={`border border-gray-300 rounded-lg w-[100px] h-[40px] flex justify-center items-center cursor-pointer ${
-                      selectedColor === color && "bg-blue-600 text-white"
-                    }`}
-                  >
-                    {color}
+          <div className="flex gap-2 items-center">
+            <p className="text-gray-600 font-semibold">Category：</p>
+            <p className="text-sm text-gray-600">{productInfo?.category}</p>
+          </div>
+          <div className="text-xl font-semibold text-gray-800">
+            {productInfo && price && productInfo.discount !== 1 ? (
+              <div className="flex gap-2">
+                <span className="line-through text-gray-400">$ {price}</span>
+                <span className="text-red-600">{discount}</span>
+              </div>
+            ) : (
+              <span>$ {discount}</span>
+            )}
+            <span className="mx-2">{current?.currencyCode}</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-gray-600 font-semibold">Description:</p>
+            <p className="text-sm text-gray-600">{productInfo && ProductShowDisc(productInfo)}</p>
+          </div>
+          {productInfo?.colors
+            ? productInfo.colors.split(",").length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <div className="text-gray-600 font-semibold">Colors:</div>
+                  <div className="flex gap-2 flex-wrap">
+                    {productInfo.colors.split(",").map((color, index) => (
+                      <div
+                        onClick={() => setSelectedColor(color)}
+                        key={index}
+                        className={`border border-gray-300 rounded-lg w-[100px] h-[40px] flex justify-center items-center cursor-pointer ${
+                          selectedColor === color && "bg-blue-600 text-white"
+                        }`}
+                      >
+                        {color}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          )
-        : null}
-      {productInfo?.sizes
-        ? productInfo.sizes.split(",").length > 0 && (
-            <div className="flex flex-col gap-2">
-              <p className="text-gray-600 font-semibold">Sizes:</p>
-              <div className="flex gap-2 flex-wrap">
-                {productInfo.sizes.split(",").map((size, index) => (
-                  <p
-                    onClick={() => setSelectedSize(size)}
-                    key={index}
-                    className={`border border-gray-300 rounded-lg w-[80px] h-[40px] flex justify-center items-center cursor-pointer ${
-                      selectedSize === size && "bg-blue-600 text-white"
-                    }`}
-                  >
-                    {size}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )
-        : null}
-      <div className="flex gap-12 justify-between items-center">
-        {/* <div className="flex flex-col gap-2">
-          <p className="text-base-medium text-grey-2">Quantity:</p>
-          <div className="flex gap-4 items-center">
-            <MinusCircle
-              className="hover:text-red-1 cursor-pointer"
-              onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-            />
-            <p className="hover:text-red-1 cursor-pointer">{quantity}</p>
-            <PlusCircle className="hover:text-red-1 cursor-pointer" onClick={() => setQuantity(quantity + 1)} />
+                </div>
+              )
+            : null}
+          {productInfo?.sizes
+            ? productInfo.sizes.split(",").length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <p className="text-gray-600 font-semibold">Sizes:</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {productInfo.sizes.split(",").map((size, index) => (
+                      <p
+                        onClick={() => setSelectedSize(size)}
+                        key={index}
+                        className={`border border-gray-300 rounded-lg w-[80px] h-[40px] flex justify-center items-center cursor-pointer ${
+                          selectedSize === size && "bg-blue-600 text-white"
+                        }`}
+                      >
+                        {size}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )
+            : null}
+          <div className="flex gap-12 justify-between items-center">
+            {/* <div className="flex flex-col gap-2">
+    <p className="text-base-medium text-grey-2">Quantity:</p>
+    <div className="flex gap-4 items-center">
+      <MinusCircle
+        className="hover:text-red-1 cursor-pointer"
+        onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+      />
+      <p className="hover:text-red-1 cursor-pointer">{quantity}</p>
+      <PlusCircle className="hover:text-red-1 cursor-pointer" onClick={() => setQuantity(quantity + 1)} />
+    </div>
+  </div> */}
+            <button
+              onClick={() => {
+                cart.addItem({
+                  item: productInfo as ProductType,
+                  quantity: quantity,
+                  color: selectedColor,
+                  size: selectedSize,
+                });
+              }}
+              className="bg-blue-600 text-white py-3 w-full rounded-lg hover:bg-blue-400"
+            >
+              Add to Cart
+            </button>
           </div>
-        </div> */}
-        <button
-          onClick={() => {
-            cart.addItem({
-              item: productInfo as ProductType,
-              quantity: quantity,
-              color: selectedColor,
-              size: selectedSize,
-            });
-          }}
-          className="bg-blue-600 text-white py-3 w-full rounded-lg hover:bg-blue-400"
-        >
-          Add to Cart
-        </button>
-      </div>
+        </>
+      )}
     </div>
   );
 };

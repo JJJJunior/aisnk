@@ -1,18 +1,18 @@
 "use client";
 import { ParentType, CollectionType, ImageType } from "@/app/lib/types";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Collections from "@/app/admin/collections/page";
 
 interface MenuInNavbarProps {
-  content: ParentType;
+  content: ParentType | null;
   isFake: number;
+  isOpen: boolean; // 从父组件传递的菜单显示状态
+  onToggle: () => void; // 切换菜单的函数
 }
 
-const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake }) => {
-  const [showMenu, setShowMenu] = useState(false);
+const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, onToggle }) => {
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
@@ -23,6 +23,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake }) => {
     }
     return url;
   };
+
   //显示伪造数据
   const CollectionShowTitle = (collection: CollectionType) => {
     let showTitle;
@@ -44,38 +45,29 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake }) => {
   };
 
   return (
-    <div className="relative">
+    <div>
       <div className="flex gap-2 justify-center items-center hover:cursor-pointer hover:text-gray-400">
-        <h1 onMouseEnter={() => setShowMenu(true)} onMouseLeave={() => setShowMenu(false)}>
-          {content?.name}
-        </h1>
-        {showMenu ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        {/* 点击时触发 onToggle */}
+        <h1 onMouseOver={onToggle}>{content?.name}</h1>
+        {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </div>
 
       {/* Menu with transition */}
       <ul
-        className={`absolute p-4 left-9 md:top-6 md:left-0 shadow-lg rounded-lg h-auto w-[330px] md:w-[800px] z-30 bg-white grid grid-cols-2 md:grid-cols-5 gap-4 transition-all duration-300 ease-in-out transform ${
-          showMenu ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+        onMouseLeave={onToggle}
+        className={`absolute z-30 bg-white p-12 shadow-lg rounded-lg top-[10px] left-[160px] w-2/3 flex flex-col gap-2 md:top-[80px] md:left-[240px] md:w-[800px] md:grid md:grid-cols-6 md:gap-12 transition-all duration-300 ease-in-out transform ${
+          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         }`}
-        onMouseEnter={() => setShowMenu(true)}
-        onMouseLeave={() => setShowMenu(false)}
       >
         {content?.collections &&
           content.collections.length > 0 &&
           content.collections.map((item: CollectionType) => (
-            <div
-              key={item.id}
-              className="flex flex-col items-center transition duration-300 ease-in-out transform hover:shadow-lg rounded-lg"
-            >
+            <div key={item.id} className="flex flex-col items-center">
               <Link href={`/web/collections/${item.title?.toLowerCase()}/${item.id}`}>
-                <p className="text-xs text-gray-400">{CollectionShowTitle(item)}</p>
-                <Image
-                  src={item.images && ImageUrl(item.images)}
-                  className="hidden md:block md:rounded-md"
-                  width={100}
-                  height={50}
-                  alt="images"
-                />
+                <p className="text-sm md:text-xs text-gray-400">{CollectionShowTitle(item)}</p>
+                <div className="hidden md:block md:w-[120px] md:h-[80px] relative rounded-2xl transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-110">
+                  <Image src={ImageUrl(item.images ? item.images : [])} fill alt="images" sizes="100vw" />
+                </div>
               </Link>
             </div>
           ))}

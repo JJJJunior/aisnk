@@ -42,16 +42,12 @@ const SalePage = async () => {
   if (res?.is_fake) return;
 
   return (
-    <div className="mx-12 flex flex-col items-center mt-6">
-      <div className="flex flex-col justify-between items-center">
-        <div className="text-2xl font-semibold">SALE</div>
-      </div>
-      <div className="w-full flex">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-          {products?.map((product) => (
-            <ProductCard product={product} key={product.id} />
-          ))}
-        </div>
+    <div className="mx-2 md:mx-12 flex flex-col items-center mt-6">
+      <div className="flex flex-col justify-between items-center text-2xl font-semibold text-gray-600 mb-6">SALE</div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        {products?.map((product) => (
+          <ProductCard product={product} key={product.id} />
+        ))}
       </div>
     </div>
   );

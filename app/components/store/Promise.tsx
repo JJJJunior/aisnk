@@ -3,7 +3,7 @@ import React from "react";
 
 const Promise = () => {
   return (
-    <div className="h-14 mx-36 my-2 mt-6 bg-white justify-around items-center hidden md:flex">
+    <div className="h-14 mx-36 my-2 mt-6 bg-white justify-around items-center hidden lg:flex">
       <div className="flex gap-4">
         <Fingerprint />
         <div>Authentic Products</div>

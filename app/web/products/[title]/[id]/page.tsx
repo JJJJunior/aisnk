@@ -50,7 +50,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = async ({ params, searchPar
       <Promise />
       <div className="mx-6 lg:mx-16">
         <Link
-          href={searchParams.from ? searchParams.from : ""}
+          href={searchParams.from !== undefined ? searchParams.from : "/web"}
           className="rounded-lg text-xl px-2 mb-2 text-gray-700 flex gap-2 w-[120px] items-center underline hover:text-gray-400"
         >
           <p>Back to</p>
