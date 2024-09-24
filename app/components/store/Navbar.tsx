@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-white">
       <div className="mx-4 h-20 lg:mx-16 lg:h-28 flex justify-between items-center lg:relative">
         {/* Logo */}
         <div className="text-xl hidden md:block left-20 md:text-xl lg:text-3xl font-semibold">

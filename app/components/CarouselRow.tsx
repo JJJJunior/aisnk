@@ -37,10 +37,11 @@ const CarouselRow: React.FC<CarouselRowProps> = ({ collections }) => {
         collections.map((item, index) => (
           <Link key={index} href={`/web/collections/top-collection/${item.id}`} className="relative hover:shadow-lg">
             <Image
-              width={200}
-              height={200}
+              width={180}
+              height={100}
               src={`/api/images?file=${item.images && item.images[0].url}`}
               alt={String(index)}
+              className="rounded-lg shadow-lg"
             ></Image>
             <div className="absolute text-xs px-2 bg-yellow-400 text-white top-0 rounded-full flex gap-2 items-center">
               <div>{item.products?.length}+</div>

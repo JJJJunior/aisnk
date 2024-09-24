@@ -92,7 +92,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
   // console.log(product);
   return (
     <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}?from=${pathname}`}>
-      <div className="w-[220px] p-2 flex flex-col justify-between">
+      <div className="w-full p-2 flex flex-col justify-between">
         <div className="relative">
           {loading && <Skeleton className="h-[200px] rounded-lg bg-white" />}
           <Image
@@ -105,7 +105,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
             onLoadingComplete={() => {
               setLoading(false);
             }} // 图片加载完成后隐藏骨架屏
-            className="w-full h-auto transform hover:scale-100 md:hover:scale-110 hover:rotate-3 transition-transform duration-300 ease-in-out hover:shadow-xl"
+            className="w-full rounded-lg shadow-md h-auto transform hover:scale-100 md:hover:scale-105 hover:rotate-3 transition-transform duration-300 ease-in-out hover:shadow-xl"
           />
           {/* {product.discount && product.discount < 1 && (
             <div className="absolute top-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SALE</div>
@@ -115,14 +115,14 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
             product.tags.split(",").map((tag, index) => {
               if (tag.toLowerCase() === "hot") {
                 return (
-                  <span className="absolute top-4 left-0 bg-red-500 text-white px-2 rounded-md text-xs" key={index}>
+                  <span className="absolute top-4 left-2 bg-red-500 text-white px-2 rounded-md text-xs" key={index}>
                     {tag}
                   </span>
                 );
               }
               if (tag.toLowerCase() === "new") {
                 return (
-                  <span className="absolute top-4 right-0 bg-green-500 text-white px-2 rounded-md text-xs" key={index}>
+                  <span className="absolute top-4 right-2 bg-green-500 text-white px-2 rounded-md text-xs" key={index}>
                     {tag}
                   </span>
                 );

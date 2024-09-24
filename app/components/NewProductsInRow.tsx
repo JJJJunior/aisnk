@@ -85,7 +85,7 @@ const NewProductsInRow = async () => {
           href="/web/collections/all"
           className="font-semibold flex gap-2 justify-center items-center hover:text-gray-400 hover:text-xl"
         >
-          <div className="underline">See More</div>
+          <div className="underline text-gray-600">See More</div>
           <ChevronRight size={20} />
         </Link>
       </div>
@@ -93,7 +93,7 @@ const NewProductsInRow = async () => {
         {newProducts &&
           newProducts.length > 0 &&
           newProducts.map((product) => (
-            <div key={product.id} className="relative shadow-md rounded-lg mb-2 hover:border-2">
+            <div key={product.id} className="relative shadow-md rounded-lg mb-2 hover:shadow-lg bg-white">
               <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}`}>
                 <div className="absolute bg-green-600 px-4 text-white rounded-md ml-2 mt-2">{product.tags}</div>
                 <div className="flex justify-center items-center">
