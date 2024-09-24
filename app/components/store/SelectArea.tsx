@@ -43,7 +43,7 @@ export const SelectArea = () => {
   useEffect(() => {
     // 如果本地没有存储汇率并且 exchange 数据已经加载完毕，选择美国的汇率作为默认值
     if (!localStorage.getItem("selectedExchange") && exchange.length > 0) {
-      const defaultExchange = exchange.find((item) => item.courtyName === "美国");
+      const defaultExchange = exchange.find((item) => item.courtyName === "default");
       if (defaultExchange) {
         setCurrent(defaultExchange);
       }

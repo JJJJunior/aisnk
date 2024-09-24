@@ -164,6 +164,7 @@ export interface ExchangeAndShippingType {
   shippingCodeDesInStripe?: string;
   paymentTypeInStripe?: string;
   allowedCountries?: string;
+  toUSDRate?: number;
 }
 
 export interface ShippingAddressType {

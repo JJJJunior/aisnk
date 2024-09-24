@@ -11,19 +11,18 @@ export const OPTIONS = () => {
 
 export const POST = async (req: NextRequest) => {
   try {
-    const { cartItems, customer, exchangeRate } = await req.json();
-    if (!cartItems || !customer || !exchangeRate) {
+    const { cartItems, customer, exchangeRateAndShipping } = await req.json();
+    if (!cartItems || !customer || !exchangeRateAndShipping) {
       return new NextResponse("Not enough data to checkout", { status: 400 });
     }
-
     //付款信息交互
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "alipay"],
+      payment_method_types: exchangeRateAndShipping.paymentTypeInStripe.split(","),
       mode: "payment",
       shipping_address_collection: {
-        allowed_countries: ["US", "AU", "CA", "DE"],
+        allowed_countries: exchangeRateAndShipping.allowedCountries.split(","),
       },
-      shipping_options: [{ shipping_rate: "shr_1Q1McqBmoK3h4yLlHo32pF7q" }],
+      shipping_options: [{ shipping_rate: exchangeRateAndShipping.shippingCodeInStripe.trim() }],
       line_items: cartItems.map((cartItem: any) => ({
         price_data: {
           currency: "usd",
@@ -35,10 +34,17 @@ export const POST = async (req: NextRequest) => {
               ...(cartItem.color && { color: cartItem.color }),
             },
           },
-          // 如果有打折就算折扣
+          // 如果有打折就算折扣,选择不同国家，加入购物车前RBM价格，放入购物车后本国价格，结算按照USD结算
           unit_amount: cartItem.item.discount
-            ? Math.ceil(cartItem.item.discount * cartItem.item.price * exchangeRate) * 100
-            : Math.ceil(cartItem.item.price * exchangeRate) * 100,
+            ? Math.ceil(
+                cartItem.item.discount *
+                  cartItem.item.price *
+                  exchangeRateAndShipping.exchangeRate *
+                  exchangeRateAndShipping.toUSDRate
+              ) * 100
+            : Math.ceil(
+                cartItem.item.price * exchangeRateAndShipping.exchangeRate * exchangeRateAndShipping.toUSDRate
+              ) * 100,
         },
         quantity: cartItem.quantity,
       })),

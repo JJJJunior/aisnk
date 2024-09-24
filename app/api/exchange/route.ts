@@ -10,6 +10,10 @@ export const GET = async (req: NextRequest) => {
         exchangeRate: true,
         currencyCode: true,
         code: true,
+        allowedCountries: true,
+        shippingCodeInStripe: true,
+        paymentTypeInStripe: true,
+        toUSDRate: true,
       },
     });
     return NextResponse.json({ data: exchange }, { status: 200 });

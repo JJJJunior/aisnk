@@ -30,8 +30,6 @@ export function Cart() {
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useCart();
   //用于呈现购物车的商品价格，让客户知道本国货币大约多少钱
   const [exchangeRateAndShipping, setExchangeRateAndShipping] = useState<ExchangeAndShippingType | null>(null);
-  //用于提交付款，目前只使用美元结算，但需要从后台获取汇率
-  const [exchangeRate, setExchangeRate] = useState<Number>(0);
   const [isFake, setIsFake] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -70,7 +68,6 @@ export function Cart() {
       setExchangeRateAndShipping(null); // 如果 localStorage 中没有数据，设置为 null
     }
     getWebSettings();
-    fetUSDRate();
   }, []);
 
   //创建客户
@@ -118,32 +115,19 @@ export function Cart() {
     }
   }, [user]);
 
-  const fetUSDRate = async () => {
-    try {
-      const rates = await axios.get("/api/exchange");
-      setExchangeRate(
-        rates.data.data.find((item: ExchangeAndShippingType) => item.courtyName === "美国" && item).exchangeRate
-      );
-    } catch (err) {
-      // console.log(err);
-      setExchangeRate(0.14);
-    }
-  };
-
   //处理付款（目前只能收美元、港币、需要按照网站后台登记的汇率进行结算）
   const handlePayment = async () => {
     setLoading(true);
     // console.log(customer);
-    // console.log(exchangeRate);
     try {
       if (!user) {
         router.push("/sign-in");
       }
-      if (!exchangeRate) return;
+      if (!exchangeRateAndShipping) return;
       const payData = JSON.stringify({
         cartItems: cartItems,
         customer,
-        exchangeRate,
+        exchangeRateAndShipping,
       });
       // console.log(payData);
       const res = await axios.post(`/api/web/checkout`, payData);

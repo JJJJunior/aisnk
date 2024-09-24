@@ -83,9 +83,14 @@ const Exchange = () => {
       key: "currencyCode",
     },
     {
-      title: "汇率",
+      title: "对RBM汇率",
       dataIndex: "exchangeRate",
       key: "exchangeRate",
+    },
+    {
+      title: "对USB汇率",
+      dataIndex: "toUSDRate",
+      key: "toUSDRate",
     },
     {
       title: "Stripe运费代码",
@@ -166,7 +171,10 @@ const Exchange = () => {
             <Form.Item label="货币代码" name="currencyCode" rules={[{ required: true, message: "货币代码" }]}>
               <Input />
             </Form.Item>
-            <Form.Item label="对人民币汇率" name="exchangeRate" rules={[{ required: true, message: "对人民币汇率" }]}>
+            <Form.Item label="对RMB汇率" name="exchangeRate" rules={[{ required: true, message: "对人民币汇率" }]}>
+              <InputNumber />
+            </Form.Item>
+            <Form.Item label="对USD汇率" name="toUSDRate" rules={[{ required: true, message: "对人民币汇率" }]}>
               <InputNumber />
             </Form.Item>
             <Form.Item

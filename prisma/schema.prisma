@@ -259,6 +259,7 @@ model ExchangeAndShipping {
   shippingCodeDesInStripe String?
   paymentTypeInStripe     String?
   allowedCountries        String?
+  toUSDRate               Float?
 
   @@map("admin_exchange_and_shipping")
 }

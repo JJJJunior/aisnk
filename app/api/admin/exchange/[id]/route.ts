@@ -24,6 +24,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     shippingCodeDesInStripe,
     paymentTypeInStripe,
     allowedCountries,
+    toUSDRate,
   } = await req.json();
   if (
     !code ||
@@ -34,7 +35,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     !shippingCodeDesInStripe ||
     !paymentTypeInStripe ||
     !allowedCountries ||
-    !englishCoutryName
+    !englishCoutryName ||
+    !toUSDRate
   ) {
     return NextResponse.json({ message: "fileds are required" }, { status: 400 });
   }
@@ -53,6 +55,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
         paymentTypeInStripe,
         allowedCountries,
         englishCoutryName,
+        toUSDRate,
       },
     });
     return NextResponse.json({ message: "Updated successfully" }, { status: 200 });

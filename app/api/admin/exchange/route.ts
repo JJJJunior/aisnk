@@ -12,6 +12,7 @@ export const POST = async (req: NextRequest) => {
     shippingCodeDesInStripe,
     paymentTypeInStripe,
     allowedCountries,
+    toUSDRate,
   } = await req.json();
   if (
     !code ||
@@ -22,7 +23,8 @@ export const POST = async (req: NextRequest) => {
     !shippingCodeDesInStripe ||
     !paymentTypeInStripe ||
     !allowedCountries ||
-    !englishCoutryName
+    !englishCoutryName ||
+    !toUSDRate
   ) {
     return NextResponse.json({ message: "fileds are required" }, { status: 400 });
   }
@@ -38,6 +40,7 @@ export const POST = async (req: NextRequest) => {
         paymentTypeInStripe,
         allowedCountries,
         englishCoutryName,
+        toUSDRate,
       },
     });
     return NextResponse.json({ message: "Created successfully" }, { status: 200 });
