@@ -1,14 +1,19 @@
 import React from "react";
 import { prisma } from "@/prisma/db";
-import { ImageType, ProductType } from "../lib/types";
+import { ImageType, ProductType, SettingsType } from "../lib/types";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-const RecomendCollection = async () => {
+interface RecomendCollectionProps {
+  websetting: SettingsType | null;
+}
+
+const RecomendCollection: React.FC<RecomendCollectionProps> = async ({ websetting }) => {
   const newProducts = await prisma.product.findMany({
     where: {
       is_recommended: 1,
+      status: "上架",
     },
     select: {
       images: {
@@ -26,13 +31,6 @@ const RecomendCollection = async () => {
     },
     orderBy: { created_at: "desc" },
     take: 6,
-  });
-  //   console.log(newProducts);
-
-  const websetting = await prisma.settings.findUnique({
-    where: {
-      key: "websettings",
-    },
   });
 
   //显示伪造数据

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import toast from "react-hot-toast";
 import { CartItemType } from "../types";
-import { message } from "antd";
 
 interface CartStore {
   cartItems: CartItemType[];
@@ -21,29 +21,29 @@ const useCart = create(
         const currentItems = get().cartItems;
         const isExisting = currentItems.find((cartItem) => cartItem.item.id === item.id);
         if (isExisting) {
-          return message.info("Item already in cart");
+          return toast("Item already in cart ❤️");
         }
         set({ cartItems: [...currentItems, { item, quantity, color, size }] });
-        message.success("Item added to cart");
+        toast.success("👟 Item added to cart");
       },
       removeItem: (idToRemove: number) => {
         const newCartItems = get().cartItems.filter((cartItem) => cartItem.item.id !== idToRemove);
         set({ cartItems: newCartItems });
-        message.success("Item removed from cart");
+        toast.success("Item removed from cart");
       },
       increaseQuantity: (idToIncrease: number) => {
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item.id === idToIncrease ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
         );
         set({ cartItems: newCartItems });
-        message.success("Quantity increased");
+        toast.success("Quantity increased");
       },
       decreaseQuantity: (idToDecrease: number) => {
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item.id === idToDecrease ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
         );
         set({ cartItems: newCartItems });
-        message.success("Quantity decreased");
+        toast.success("Quantity decreased");
       },
       clearCart: () => set({ cartItems: [] }),
     }),

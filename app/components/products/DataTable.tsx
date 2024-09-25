@@ -256,20 +256,18 @@ const DataTable: React.FC<DataTableProps> = ({
     },
   ];
   return (
-    <div>
-      <Table
-        rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
-        sticky={true}
-        columns={columns}
-        dataSource={dataSource}
-        rowKey="id"
-        className="border overflow-hidden shadow-lg"
-        loading={loading}
-      />
-    </div>
+    <Table
+      rowSelection={{
+        type: "checkbox",
+        ...rowSelection,
+      }}
+      sticky={true}
+      columns={columns}
+      dataSource={dataSource}
+      rowKey="id"
+      className="border overflow-hidden shadow-lg"
+      loading={loading}
+    />
   );
 };
 

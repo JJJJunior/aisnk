@@ -18,5 +18,5 @@ main()
   })
   .finally(() => {
     prisma.$disconnect();
-    console.log("db已断开...");
+    // console.log("db已断开...");
   });

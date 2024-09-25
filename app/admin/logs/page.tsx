@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Table, Divider } from "antd";
 import { LogType } from "@/app/lib/types";
 import axios from "axios";
 
@@ -79,7 +79,9 @@ const SystemLogs = () => {
     },
   ];
   return (
-    <div>
+    <div className="w-full">
+      <div className="text-2xl font-semibold">日志管理</div>
+      <Divider />
       <Table dataSource={systemLogs} columns={columns} rowKey="id" className="border shadow-lg" loading={loading} />;
     </div>
   );

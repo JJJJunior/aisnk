@@ -1,5 +1,6 @@
 import React from "react";
 import { prisma } from "@/prisma/db";
+import { Divider } from "antd";
 
 const AdminPage = async () => {
   // 获取访客数据
@@ -42,47 +43,51 @@ const AdminPage = async () => {
   }));
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* 访客表格 */}
-      <div>
-        <h2 className="text-xl font-bold mb-4">每日访客统计</h2>
-        <table className="min-w-full bg-white border">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">日期</th>
-              <th className="py-2 px-4 border-b">访客数</th>
-            </tr>
-          </thead>
-          <tbody>
-            {chartData.map((item) => (
-              <tr key={item.date}>
-                <td className="py-2 px-4 border-b">{item.date}</td>
-                <td className="py-2 px-4 border-b">{item.visitCount}</td>
+    <div className="w-full">
+      <div className="text-2xl font-semibold">首页</div>
+      <Divider />
+      <div className="grid grid-cols-2 gap-4">
+        {/* 访客表格 */}
+        <div>
+          <h2 className="text-lg font-bold mb-4">每日访客统计</h2>
+          <table className="min-w-full bg-white border">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b">日期</th>
+                <th className="py-2 px-4 border-b">访客数</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {chartData.map((item) => (
+                <tr key={item.date}>
+                  <td className="py-2 px-4 border-b">{item.date}</td>
+                  <td className="py-2 px-4 border-b">{item.visitCount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {/* 客户表格 */}
-      <div>
-        <h2 className="text-xl font-bold mb-4">每日新增客户统计</h2>
-        <table className="min-w-full bg-white border">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">日期</th>
-              <th className="py-2 px-4 border-b">新增客户数</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customerChartData.map((item) => (
-              <tr key={item.date}>
-                <td className="py-2 px-4 border-b">{item.date}</td>
-                <td className="py-2 px-4 border-b">{item.newCustomers}</td>
+        {/* 客户表格 */}
+        <div>
+          <h2 className="text-lg font-bold mb-4">每日新增客户统计</h2>
+          <table className="min-w-full bg-white border">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b">日期</th>
+                <th className="py-2 px-4 border-b">新增客户数</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {customerChartData.map((item) => (
+                <tr key={item.date}>
+                  <td className="py-2 px-4 border-b">{item.date}</td>
+                  <td className="py-2 px-4 border-b">{item.newCustomers}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

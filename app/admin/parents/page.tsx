@@ -1,5 +1,5 @@
 "use client";
-import { Form, Input, Button, Table, message, Popconfirm } from "antd";
+import { Form, Input, Button, Table, message, Popconfirm, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { FormProps } from "antd/lib";
 import axios from "axios";
@@ -86,7 +86,9 @@ const Parents = () => {
   ];
 
   return (
-    <div>
+    <div className="w-full">
+      <div className="text-2xl font-semibold">父栏目管理</div>
+      <Divider />
       <Form className="flex gap-2" onFinish={onFinish} form={form}>
         <Form.Item<FileType> label="父栏目" name="name" rules={[{ required: true, message: "请输入父栏目名称" }]}>
           <Input />

@@ -12,64 +12,42 @@ import {
 import axios from "axios";
 import { ExchangeAndShippingType } from "@/app/lib/types";
 import Image from "next/image";
+import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
 
 export const SelectArea = () => {
   const [exchange, setExchange] = useState<ExchangeAndShippingType[]>([]);
-  const [current, setCurrent] = useState<ExchangeAndShippingType | null>(null);
+  const { exchangeAndShipping, addExchangeAndShipping } = useExchangeAndShipping();
 
+  //初始化默认显示的汇率
   const fetchExchangeAndShipping = async () => {
     try {
       const res = await axios.get("/api/exchange");
       setExchange(res.data.data);
+      addExchangeAndShipping(res.data.data.find((item: ExchangeAndShippingType) => item.courtyName === "default"));
     } catch (err) {
       // console.error(err);
     }
   };
 
+  // console.log(exchangeAndShipping);
+
   useEffect(() => {
     fetchExchangeAndShipping();
-
-    // 从本地存储获取已选择的汇率
-    const savedExchange = localStorage.getItem("selectedExchange");
-    if (savedExchange) {
-      try {
-        setCurrent(JSON.parse(savedExchange));
-      } catch (error) {
-        setCurrent(null);
-      }
-    }
   }, []);
-
-  useEffect(() => {
-    // 如果本地没有存储汇率并且 exchange 数据已经加载完毕，选择美国的汇率作为默认值
-    if (!localStorage.getItem("selectedExchange") && exchange.length > 0) {
-      const defaultExchange = exchange.find((item) => item.courtyName === "default");
-      if (defaultExchange) {
-        setCurrent(defaultExchange);
-      }
-    }
-  }, [exchange]); // 只在 exchange 数据加载完成后运行
 
   const handleSelect = (value: string) => {
     if (!exchange) return;
-    const selected = exchange.find((item) => item.id === Number(value)) || null;
-    setCurrent(selected);
-    window.location.reload();
+    const selected = exchange.find((item) => item.id === Number(value));
+    if (!selected) return;
+    addExchangeAndShipping(selected);
   };
 
-  useEffect(() => {
-    // 保存选中的汇率到 localStorage
-    if (current) {
-      localStorage.setItem("selectedExchange", JSON.stringify(current));
-    }
-  }, [current]);
-
   return (
-    <Select onValueChange={handleSelect} value={String(current?.id || "")}>
+    <Select onValueChange={handleSelect} value={String(exchangeAndShipping?.id || "")}>
       <SelectTrigger className="w-[120px]">
         <SelectValue>
           {/* 如果 current 为空，显示占位符 */}
-          {current?.id ? current.currencyCode : "Currency."}
+          {exchangeAndShipping?.id ? exchangeAndShipping.currencyCode : "Currency."}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

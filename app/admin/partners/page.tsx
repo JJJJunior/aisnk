@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import { Table, Button, Popconfirm, message, Input, Space } from "antd";
+import { Table, Button, Popconfirm, message, Input, Space, Divider } from "antd";
 import axios from "axios";
 import QrcodePage from "@/app/components/Qrcode";
 import Highlighter from "react-highlight-words";
@@ -197,15 +197,19 @@ const page = () => {
     },
   ];
   return (
-    <Table
-      dataSource={partners}
-      columns={columns}
-      bordered
-      showSorterTooltip={{ target: "sorter-icon" }}
-      rowKey="id"
-      size="small"
-      loading={loading}
-    />
+    <div className="w-full">
+      <div className="text-2xl font-semibold">合作商管理</div>
+      <Divider />
+      <Table
+        dataSource={partners}
+        columns={columns}
+        bordered
+        showSorterTooltip={{ target: "sorter-icon" }}
+        rowKey="id"
+        size="small"
+        loading={loading}
+      />
+    </div>
   );
 };
 

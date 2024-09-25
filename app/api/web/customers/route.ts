@@ -1,7 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/prisma/db";
+import { auth } from "@clerk/nextjs/server";
 
 export const POST = async (req: NextRequest) => {
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
   const { id, username, email, firstName, lastName, createdAt, lastSignInAt, referredById } = await req.json();
   if (!id) {
     return NextResponse.json({ message: "id is required" }, { status: 400 });

@@ -3,14 +3,13 @@ import CarouselRow from "./CarouselRow";
 import { prisma } from "@/prisma/db";
 import Image from "next/image";
 import Link from "next/link";
+import { SettingsType } from "../lib/types";
 
-const TopCollection = async () => {
-  const res = await prisma.settings.findUnique({
-    where: {
-      key: "websettings",
-    },
-  });
-  const isFake = res?.is_fake;
+interface HotProductsInRowProps {
+  websetting: SettingsType;
+}
+const TopCollection: React.FC<HotProductsInRowProps> = async ({ websetting }) => {
+  const isFake = websetting?.is_fake;
   const collections = await prisma.collection.findMany({
     select: {
       id: true,

@@ -4,11 +4,16 @@ import { ImageType, ProductType } from "../lib/types";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { SettingsType } from "../lib/types";
 
-const HotProductsInRow = async () => {
+interface HotProductsInRowProps {
+  websetting: SettingsType | null;
+}
+const HotProductsInRow: React.FC<HotProductsInRowProps> = async ({ websetting }) => {
   const newProducts = await prisma.product.findMany({
     where: {
       tags: "hot",
+      status: "上架",
     },
     select: {
       images: {
@@ -27,14 +32,6 @@ const HotProductsInRow = async () => {
     orderBy: { created_at: "desc" },
     take: 6,
   });
-  //   console.log(newProducts);
-
-  const websetting = await prisma.settings.findUnique({
-    where: {
-      key: "websettings",
-    },
-  });
-
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;

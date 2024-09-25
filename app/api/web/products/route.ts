@@ -9,6 +9,9 @@ export const GET = async (req: NextRequest) => {
   try {
     if (tag !== "sale") {
       products = await prisma.product.findMany({
+        where: {
+          status: "上架",
+        },
         take, // 只获取一定数量的产品用于分页加载
         skip, // 跳过一定数量的产品用于分页加载
         select: {
@@ -35,6 +38,7 @@ export const GET = async (req: NextRequest) => {
           discount: {
             lt: 1,
           },
+          status: "上架",
         },
         select: {
           id: true,

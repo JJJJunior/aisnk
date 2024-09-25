@@ -11,6 +11,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: number }
     const collection = await prisma.collection.findUnique({
       where: {
         id: Number(params.id),
+        status: "上线",
       },
       include: {
         images: true,

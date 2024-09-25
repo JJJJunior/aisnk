@@ -18,6 +18,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = async ({ params, searchPar
   const product = await prisma.product.findUnique({
     where: {
       id: Number(params.id),
+      status: "上架",
     },
     select: {
       id: true,

@@ -207,15 +207,15 @@ export interface CustomerType {
 
 export interface PartnerType {
   id: string;
+  isRef: number;
   username: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  referralCode?: string;
-  referredById?: string;
-  refCount?: number;
-  orderAmount?: number;
-  isRef?: number;
+  fullname: string;
+  email: string;
+  customerId: string;
+  referralCode: string;
+  refCount: number;
+  commission: number;
+  subCustomersTotalOrders: OrderType[];
 }
 
 export interface CartType {
@@ -233,5 +233,9 @@ export interface QAType {
 }
 
 export interface SettingsType {
+  id?: number;
   is_fake?: number;
+  key?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }

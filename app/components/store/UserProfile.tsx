@@ -12,22 +12,17 @@ import useRefTracker from "@/app/lib/hooks/useRefTracker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandGroup, CommandItem, CommandList, Command } from "@/components/ui/command";
 import { UserIcon, LogOutIcon } from "lucide-react";
+import { useCustomer } from "@/app/lib/hooks/useCustomer";
 
 //用户使用clerk登录后
 const UserProfile = () => {
   const { user } = useUser();
   const router = useRouter();
   const { cartItems } = useCart();
-  const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const { refId } = useRefTracker();
   const [open, setOpen] = useState(false);
   const { signOut } = useClerk();
-
-  const isLogin = () => {
-    const value = `${document.cookie}`;
-    return value.includes("__session");
-  };
+  const { addCustomerInfo, customer } = useCustomer();
 
   //如果有推荐人，将推荐码保存在数据库
   const createCustomer = async (user: CustomerType) => {
@@ -42,6 +37,36 @@ const UserProfile = () => {
     }
   };
 
+  //从数据库获取用户资料，放入全局hooks中
+  const getCustomer = async (userId: string) => {
+    try {
+      const res = await axios.get(`/api/web/customers/${userId}`);
+      if (res.status === 200) {
+        addCustomerInfo(res.data.data);
+      }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  //从数据库获取用户资料，放入全局hooks中
+  useEffect(() => {
+    if (user) {
+      getCustomer(user.id);
+      if (user.id !== customer.id) {
+        createCustomer({
+          id: user.id,
+          username: user.username ? user.username : "",
+          email: user.emailAddresses[0].emailAddress ? user.emailAddresses[0].emailAddress : "",
+          firstName: user.firstName ? user.firstName : "",
+          lastName: user.lastName ? user.lastName : "",
+          createdAt: user.createdAt ? user.createdAt : null,
+          lastSignInAt: user.lastSignInAt ? user.lastSignInAt : null,
+        });
+      }
+    }
+  }, [user]);
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -53,37 +78,10 @@ const UserProfile = () => {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  useEffect(() => {
-    const loginStatus = isLogin();
-    setLoggedIn(loginStatus);
-  }, []);
-
-  useEffect(() => {
-    if (!loggedIn) {
-      setLoading(false);
-    } else {
-      if (!user) {
-        setLoading(true);
-      } else {
-        createCustomer({
-          id: user.id,
-          username: user.username ? user.username : "",
-          email: user.emailAddresses[0].emailAddress ? user.emailAddresses[0].emailAddress : "",
-          firstName: user.firstName ? user.firstName : "",
-          lastName: user.lastName ? user.lastName : "",
-          createdAt: user.createdAt ? user.createdAt : null,
-          lastSignInAt: user.lastSignInAt ? user.lastSignInAt : null,
-        });
-        setLoading(false);
-      }
-    }
-  }, [user, loggedIn]);
   // console.log(user);
   return (
     <div className="flex gap-8">
-      {loading ? (
-        <Skeleton className="h-8 w-8 rounded-full" />
-      ) : user ? (
+      {user ? (
         <div className="relative">
           <button className="hover:cursor-pointer" onClick={() => setOpen(!open)}>
             <Avatar className="h-8 w-8 rounded-full shadow-md">

@@ -15,12 +15,14 @@ import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MinusCircle, PlusCircle, Trash2Icon } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { CartType, CustomerType } from "@/app/lib/types";
 import useRefTracker from "@/app/lib/hooks/useRefTracker";
 import { ExchangeAndShippingType } from "@/app/lib/types";
 import { ImageType, ProductType } from "@/app/lib/types";
+import { useSettings } from "@/app/lib/hooks/useSettings";
+import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
 
 export function Cart() {
   const { user } = useUser();
@@ -29,46 +31,27 @@ export function Cart() {
   const [customer, setCustomer] = useState<CustomerType | null>(null);
   const { cartItems, increaseQuantity, decreaseQuantity, removeItem } = useCart();
   //用于呈现购物车的商品价格，让客户知道本国货币大约多少钱
-  const [exchangeRateAndShipping, setExchangeRateAndShipping] = useState<ExchangeAndShippingType | null>(null);
-  const [isFake, setIsFake] = useState(0);
+  const { exchangeAndShipping } = useExchangeAndShipping();
   const [loading, setLoading] = useState(false);
+  // 读取网站设置数据
+  const { setting } = useSettings();
 
-  const getWebSettings = async () => {
-    const res = await axios.get("/api/web/settings/websettings");
-    if (res.status === 200) {
-      setIsFake(res.data.data.is_fake);
-    }
-  };
+  // console.log(exchangeAndShipping);
+
   // (cartItem.item.price ?? 0) * currentRate
   const total = cartItems.reduce((acc, cartItem) => {
     const price = cartItem.item.discount
       ? Math.ceil(
           cartItem.item.discount *
             (cartItem.item.price ?? 0) *
-            (exchangeRateAndShipping && exchangeRateAndShipping.exchangeRate ? exchangeRateAndShipping.exchangeRate : 1)
+            (exchangeAndShipping && exchangeAndShipping.exchangeRate ? exchangeAndShipping.exchangeRate : 1)
         )
       : Math.ceil(
           (cartItem.item.price ?? 0) *
-            (exchangeRateAndShipping && exchangeRateAndShipping.exchangeRate ? exchangeRateAndShipping.exchangeRate : 1)
+            (exchangeAndShipping && exchangeAndShipping.exchangeRate ? exchangeAndShipping.exchangeRate : 1)
         );
     return acc + price * cartItem.quantity;
   }, 0);
-
-  //获取当前汇率(仅用于购物车显示)
-  useEffect(() => {
-    const savedExchange = localStorage.getItem("selectedExchange");
-    if (savedExchange) {
-      try {
-        setExchangeRateAndShipping(JSON.parse(savedExchange)); // 解析 JSON 字符串为对象
-      } catch (error) {
-        console.error("Failed to parse saved exchange", error);
-        setExchangeRateAndShipping(null); // 解析失败时，设置为 null
-      }
-    } else {
-      setExchangeRateAndShipping(null); // 如果 localStorage 中没有数据，设置为 null
-    }
-    getWebSettings();
-  }, []);
 
   //创建客户
   const createCustomer = async (user: CustomerType) => {
@@ -123,11 +106,11 @@ export function Cart() {
       if (!user) {
         router.push("/sign-in");
       }
-      if (!exchangeRateAndShipping) return;
+      if (!exchangeAndShipping) return;
       const payData = JSON.stringify({
         cartItems: cartItems,
         customer,
-        exchangeRateAndShipping,
+        exchangeAndShipping,
       });
       // console.log(payData);
       const res = await axios.post(`/api/web/checkout`, payData);
@@ -165,7 +148,7 @@ export function Cart() {
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -176,7 +159,7 @@ export function Cart() {
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {
@@ -222,13 +205,12 @@ export function Cart() {
                 // 根据汇率显示价格,基础价格参考人民币
                 if (cartItem && cartItem.item.price) {
                   price = Math.ceil(
-                    cartItem.item.price *
-                      (exchangeRateAndShipping?.exchangeRate ? exchangeRateAndShipping?.exchangeRate : 1)
+                    cartItem.item.price * (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
                   );
                   discount = Math.ceil(
                     cartItem.item.price *
                       (cartItem.item.discount ? cartItem.item.discount : 1) *
-                      (exchangeRateAndShipping?.exchangeRate ? exchangeRateAndShipping?.exchangeRate : 1)
+                      (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
                   );
                 }
                 return (
@@ -288,7 +270,7 @@ export function Cart() {
                 <span>Total</span>
                 <div>
                   <span>${subtotalRounded}</span>
-                  <span className="mx-2">{exchangeRateAndShipping?.currencyCode}</span>
+                  <span className="mx-2">{exchangeAndShipping?.currencyCode}</span>
                 </div>
               </div>
             </div>

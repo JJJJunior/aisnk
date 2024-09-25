@@ -1,5 +1,5 @@
 "use client";
-import { Form, Input, Button, Table, message, Popconfirm, InputNumber } from "antd";
+import { Form, Input, Button, Table, message, Popconfirm, InputNumber, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { FormProps } from "antd/lib";
 import axios from "axios";
@@ -155,7 +155,9 @@ const Exchange = () => {
   }, []);
 
   return (
-    <div>
+    <div className="w-full">
+      <div className="text-2xl font-semibold">汇率及运费管理</div>
+      <Divider />
       <Form onFinish={onFinish} form={form}>
         <div>
           <div className="grid grid-cols-4 gap-4">

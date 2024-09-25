@@ -81,8 +81,9 @@ const page = () => {
   };
 
   return (
-    <div>
-      <div className="text-2xl font-semibold">数据展示管理</div>
+    <div className="w-full">
+      <div className="text-2xl font-semibold">网站设置</div>
+      <Divider />
       <div>
         <div className="flex gap-4 my-6">
           <p className="font-semibold">网站是否显示伪数据</p>
@@ -93,9 +94,9 @@ const page = () => {
         </p>
       </div>
       <Divider />
-      <div className="text-2xl font-semibold">网站信息管理</div>
+      <div className="text-xl font-semibold">网站信息管理</div>
       <Divider />
-      <div className="w-full grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-4 gap-6">
         {qas &&
           qas.length > 0 &&
           qas.map((qas) => (

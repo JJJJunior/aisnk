@@ -10,7 +10,7 @@ import {
 } from "@/app/lib/types";
 import axios from "axios";
 import type { InputRef, TableColumnsType, TableColumnType } from "antd";
-import { Table, Select, message, Tag, Button, Popconfirm, Input, Space } from "antd";
+import { Table, Select, message, Tag, Button, Popconfirm, Input, Space, Divider } from "antd";
 import Image from "next/image";
 import type { PopconfirmProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
@@ -456,15 +456,19 @@ const page = () => {
     );
   };
   return (
-    <Table
-      rowKey="id"
-      expandable={{ expandedRowRender }}
-      dataSource={orders}
-      columns={columns}
-      size="small"
-      showHeader
-      loading={loading}
-    />
+    <div className="w-full">
+      <div className="text-2xl font-semibold">订单管理</div>
+      <Divider />
+      <Table
+        rowKey="id"
+        expandable={{ expandedRowRender }}
+        dataSource={orders}
+        columns={columns}
+        size="small"
+        showHeader
+        loading={loading}
+      />
+    </div>
   );
 };
 

@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Image as AntImage } from "antd";
 import { ImageType } from "@/app/lib/types";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSettings } from "@/app/lib/hooks/useSettings";
 
 interface GalleryProps {
   images: ImageType[];
@@ -13,31 +13,24 @@ interface GalleryProps {
 const Gallery: React.FC<GalleryProps> = ({ images }) => {
   const [testImages, setTestImages] = useState<ImageType[]>([]);
   const [mainImage, setMainImage] = useState("");
-  const [isFake, setIsFake] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { setting } = useSettings();
 
-  const getWebSettings = async () => {
-    try {
-      const res = await axios.get("/api/web/settings/websettings");
-      setIsFake(res.data.data.is_fake);
+  useEffect(() => {
+    if (images) {
       setLoading(false);
-    } catch (err) {
-      // console.log(err);
     }
-  };
-  useEffect(() => {
-    getWebSettings();
-  }, []);
+  }, [images]);
 
   useEffect(() => {
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       setTestImages(images.slice(9, images?.length));
       setMainImage(images[images.length - 1].url);
     } else {
       setTestImages(images.slice(0, 9));
       setMainImage(images[0].url);
     }
-  }, [isFake]);
+  }, [setting.is_fake]);
 
   return (
     <div className="flex flex-col gap-3 lg:flex-1 h-auto">

@@ -1,48 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { ImageType, ProductType } from "@/app/lib/types";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ExchangeAndShippingType } from "@/app/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname } from "next/navigation";
+import { useSettings } from "@/app/lib/hooks/useSettings";
+import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
+import { useCustomer } from "@/app/lib/hooks/useCustomer";
+import axios from "axios";
+import { ExchangeAndShippingType } from "@/app/lib/types";
 
 interface ProductCartProps {
   product: ProductType | undefined;
-  isFake?: number | null;
 }
 
-const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
-  const [exchangeRateAndShipping, setExchangeRateAndShipping] = useState<ExchangeAndShippingType | null>(null);
+const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const { setting } = useSettings();
+  const { exchangeAndShipping } = useExchangeAndShipping();
+  const { customer } = useCustomer();
+  const [commission, setCommission] = useState(0);
+  const [commissionLoading, setCommissionLoading] = useState(false);
 
-  //获取当前汇率
-  useEffect(() => {
-    const savedExchange = localStorage.getItem("selectedExchange");
-    if (savedExchange) {
-      try {
-        setExchangeRateAndShipping(JSON.parse(savedExchange)); // 解析 JSON 字符串为对象
-      } catch (error) {
-        console.error("Failed to parse saved exchange", error);
-        setExchangeRateAndShipping(null); // 解析失败时，设置为 null
-      }
-    } else {
-      setExchangeRateAndShipping(null); // 如果 localStorage 中没有数据，设置为 null
-    }
-  }, []);
   // 产品价格规则 一共三个组件使用价格:ProductCard  ProductInfo  Cart
   let price;
   let discount;
   // 根据汇率显示价格,基础价格参考人民币
   if (product && product.price) {
     price = Math.ceil(
-      product.price * (exchangeRateAndShipping?.exchangeRate ? exchangeRateAndShipping?.exchangeRate : 1)
+      product.price * (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
     ).toFixed(2);
     discount = Math.ceil(
       product.price *
         (product.discount ? product.discount : 1) *
-        (exchangeRateAndShipping?.exchangeRate ? exchangeRateAndShipping?.exchangeRate : 1)
+        (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
     ).toFixed(2);
   }
 
@@ -62,7 +56,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -72,7 +66,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {
@@ -90,11 +84,45 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
   };
 
   // console.log(product);
+
+  //供代理商查看佣金
+  const CheckCommission = async (product: ProductType) => {
+    setCommissionLoading(true);
+    if (!product) return;
+    try {
+      const res = await axios.post(`/api/web/products/${product.id}/commission`, {
+        customerId: customer.id,
+      });
+      if (res.status === 200) {
+        setCommission(res.data.commission);
+        setCommissionLoading(false);
+      }
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  const countCommission = (commission: number, product: ProductType, exchangeAndShipping: ExchangeAndShippingType) => {
+    let result;
+    if ((product.discount as number) < 1) {
+      result = Math.ceil(
+        commission *
+          (product.discount ? product.discount : 1) *
+          (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
+      ).toFixed(2);
+    } else {
+      result = Math.ceil(
+        commission * (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
+      ).toFixed(2);
+    }
+    return result;
+  };
+
   return (
-    <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}?from=${pathname}`}>
-      <div className="w-full p-2 flex flex-col justify-between">
-        <div className="relative">
-          {loading && <Skeleton className="h-[200px] rounded-lg bg-white" />}
+    <div className="w-full p-2 flex flex-col justify-between">
+      <div className="relative">
+        <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}?from=${pathname}`}>
+          {loading && <Skeleton className="h-[220px] rounded-lg bg-white" />}
           <Image
             src={ImageUrl(product?.images as [])}
             width={0}
@@ -128,23 +156,40 @@ const ProductCard: React.FC<ProductCartProps> = ({ product, isFake }) => {
                 );
               }
             })}
-          <div className="text-xs mt-1 mx-2 text-gray-700 mb-2">{product && ProductShowTitle(product)}</div>
-        </div>
-        <div>
-          <div className="mx-2 text-sm font-semibold text-gray-600 flex gap-2 items-center">
-            {product?.discount && product.discount < 1 ? (
-              <div className="flex gap-2">
-                <span className="line-through text-gray-400">$ {price}</span>
-                <span className="text-red-600">{discount}</span>
-              </div>
-            ) : (
-              <span className="text-gray-600">$ {price}</span>
-            )}
-            <span className="text-gray-400 text-xs">{exchangeRateAndShipping?.currencyCode}</span>
-          </div>
+        </Link>
+        <div className="text-xs mt-1 mx-2 text-gray-700 mb-2 text-center">{product && ProductShowTitle(product)}</div>
+      </div>
+      <div>
+        <div className="mx-2 text-xs font-semibold text-gray-600 flex gap-2 justify-center items-center">
+          {product?.discount && product.discount < 1 ? (
+            <div className="flex gap-2">
+              <span className="line-through text-gray-400">$ {price}</span>
+              <span className="text-red-600">{discount}</span>
+            </div>
+          ) : (
+            <span className="text-gray-600">$ {price}</span>
+          )}
+          <span className="text-gray-400 text-xs">{exchangeAndShipping?.currencyCode}</span>
         </div>
       </div>
-    </Link>
+      {customer &&
+        customer.isRef === 1 &&
+        (commission === 0 ? (
+          <Button
+            size="sm"
+            className="bg-slate-100 shadow-none text-slate-100"
+            onClick={() => CheckCommission(product as ProductType)}
+            disabled={commissionLoading}
+          >
+            {commissionLoading ? <span className="text-black">Loading...</span> : "check"}
+          </Button>
+        ) : (
+          <div className="text-xs text-red-500 font-semibold text-center">
+            CB: {countCommission(commission, product as ProductType, exchangeAndShipping)}{" "}
+            {exchangeAndShipping?.currencyCode}
+          </div>
+        ))}
+    </div>
   );
 };
 

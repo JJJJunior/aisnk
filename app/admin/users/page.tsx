@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import RegisterForm from "@/app/components/RegisterForm";
-import { Table, Popconfirm, Button, message } from "antd";
+import { Table, Popconfirm, Button, message, Divider } from "antd";
 import { UserType } from "@/app/lib/types";
 import axios from "axios";
 import { JWTPlayloadType } from "@/app/lib/types";
@@ -127,8 +127,12 @@ const Users = () => {
     },
   ];
   return (
-    <div>
-      <RegisterForm fetchUsers={fetchUsers} />
+    <div className="w-full">
+      <div className="text-2xl font-semibold">用户管理</div>
+      <Divider />
+      <div className="mb-2">
+        <RegisterForm fetchUsers={fetchUsers} />
+      </div>
       <Table dataSource={users} columns={columns} rowKey="id" className="border shadow-lg" loading={loading} />;
     </div>
   );

@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   }
 
   try {
-    const partner = await prisma.customer.findUnique({
+    const customer = await prisma.customer.findUnique({
       where: {
         id: params.id,
       },
@@ -24,13 +24,19 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
         referralCode: true,
       },
     });
-    if (!partner || partner.isRef !== 1) {
+
+    if (!customer) {
       return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+
+    //普通客户直接返回
+    if (customer.isRef === 0) {
+      return NextResponse.json(customer, { status: 200 });
     }
 
     const allSubcustomers = await prisma.customer.findMany({
       where: {
-        referredById: partner.referralCode,
+        referredById: customer.referralCode,
       },
       select: {
         id: true,
@@ -73,7 +79,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
 
     const count = await prisma.customer.count({
       where: {
-        referredById: partner.referralCode,
+        referredById: customer.referralCode,
       },
     });
     // 计算此合作伙伴引荐客户的订单总金额
@@ -84,13 +90,13 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json(
       {
         data: {
-          id: partner.id,
-          isRef: partner.isRef,
-          username: partner.username,
-          fullname: partner.lastName + " " + partner.firstName,
-          email: partner.email,
-          customerId: partner.id,
-          referralCode: partner.referralCode,
+          id: customer.id,
+          isRef: customer.isRef,
+          username: customer.username,
+          fullname: customer.lastName + " " + customer.firstName,
+          email: customer.email,
+          customerId: customer.id,
+          referralCode: customer.referralCode,
           refCount: count,
           commission: totalCommission,
           subCustomersTotalOrders: subCustomersTotalOrders,

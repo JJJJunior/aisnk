@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import DataTable from "@/app/components/products/DataTable";
-import { Button, Select, message } from "antd";
+import { Button, Select, message, Divider } from "antd";
 import { PlusCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { CollectionType, ProductType } from "@/app/lib/types";
 import Link from "next/link";
@@ -91,7 +91,9 @@ const Products = () => {
   };
   return (
     <div className="w-full">
-      <div className="flex gap-4">
+      <div className="text-2xl font-semibold">产品管理</div>
+      <Divider />
+      <div className="flex gap-4 mb-2">
         {showAddColumns && (
           <>
             <Select
@@ -129,15 +131,13 @@ const Products = () => {
           </Link>
         </Button>
       </div>
-      <div className="w-full">
-        <DataTable
-          dataSource={products}
-          fetchCollections={fetchProducts}
-          setShowAddColumns={setShowAddColumns}
-          receiveDataFromChild={receiveDataFromChild}
-          loading={loading}
-        />
-      </div>
+      <DataTable
+        dataSource={products}
+        fetchCollections={fetchProducts}
+        setShowAddColumns={setShowAddColumns}
+        receiveDataFromChild={receiveDataFromChild}
+        loading={loading}
+      />
     </div>
   );
 };

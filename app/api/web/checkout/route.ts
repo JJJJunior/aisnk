@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { auth } from "@clerk/nextjs/server";
 
 export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
   typescript: true,
@@ -10,6 +11,12 @@ export const OPTIONS = () => {
 };
 
 export const POST = async (req: NextRequest) => {
+  const { userId } = auth();
+
+  if (!userId) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
   try {
     const { cartItems, customer, exchangeRateAndShipping } = await req.json();
     if (!cartItems || !customer || !exchangeRateAndShipping) {

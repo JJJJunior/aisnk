@@ -6,6 +6,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { CollectionType } from "@/app/lib/types";
 import Link from "next/link";
 import axios from "axios";
+import { Divider } from "antd/lib";
 
 const Collections = () => {
   const [collections, setCollections] = useState<CollectionType[]>([]);
@@ -32,7 +33,9 @@ const Collections = () => {
 
   return (
     <div className="w-full">
-      <div>
+      <div className="text-2xl font-semibold">栏目管理</div>
+      <Divider />
+      <div className="mb-2">
         <Button type="primary">
           <Link href="/admin/collections/new">
             添加栏目
@@ -40,9 +43,7 @@ const Collections = () => {
           </Link>
         </Button>
       </div>
-      <div className="w-full p-4">
-        <DataTable dataSource={collections} fetchCollections={fetchCollections} loading={loading} />
-      </div>
+      <DataTable dataSource={collections} fetchCollections={fetchCollections} loading={loading} />
     </div>
   );
 };

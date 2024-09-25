@@ -5,7 +5,6 @@ import ProductCard from "@/app/components/store/ProductCard";
 import { usePathname } from "next/navigation";
 import { ProductCollectionType } from "@/app/lib/types";
 import Loader from "../Loader";
-import axios from "axios";
 
 interface InfiniteScrollClientProps {
   iniCollectionProducts: ProductCollectionType[];
@@ -17,19 +16,12 @@ const InfiniteScrollClient: React.FC<InfiniteScrollClientProps> = ({ iniCollecti
   const [skip, setSkip] = useState(Number(process.env.NEXT_PUBLIC_PAGE_SHOW_PRODUCTS_COUNT && "12")); // 跳过已经加载的产品数量
   const pathname = usePathname();
   const [loading, setLoading] = useState(true); //
-  const [isFake, setIsFake] = useState(0);
-
-  const getWebSettings = async () => {
-    const res = await axios.get("/api/web/settings/websettings");
-    if (res.status === 200) {
-      setIsFake(res.data.data.is_fake);
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    getWebSettings();
-  }, []);
+    if (iniCollectionProducts) {
+      setLoading(false); // 初始数据加载完成，关闭 loading 状态
+    }
+  }, [iniCollectionProducts]);
 
   useEffect(() => {
     if (iniCollectionProducts.length < Number(process.env.NEXT_PUBLIC_PAGE_SHOW_PRODUCTS_COUNT && "12")) {
@@ -64,7 +56,7 @@ const InfiniteScrollClient: React.FC<InfiniteScrollClientProps> = ({ iniCollecti
     >
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {collectionProducts.map((item, index) => (
-          <ProductCard product={item.product && item.product} key={index} isFake={isFake} />
+          <ProductCard product={item.product && item.product} key={index} />
         ))}
       </div>
     </InfiniteScroll>

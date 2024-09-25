@@ -11,15 +11,6 @@ const ShowAllProductsPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [isFake, setIsFake] = useState(0);
-
-  const getWebSettings = async () => {
-    const res = await axios.get("/api/web/settings/websettings");
-    if (res.status === 200) {
-      setIsFake(res.data.data.is_fake);
-      setLoading(false);
-    }
-  };
 
   const getAllProducts = async (skip: number, take: number) => {
     try {
@@ -36,6 +27,7 @@ const ShowAllProductsPage = () => {
     try {
       const initialProducts = await getAllProducts(0, Number(process.env.NEXT_PUBLIC_PAGE_SHOW_PRODUCTS_COUNT) || 12);
       if (initialProducts.length > 0) {
+        setLoading(false); // 初始 loading 结束
         setProducts(initialProducts);
         setSkip(Number(process.env.NEXT_PUBLIC_PAGE_SHOW_PRODUCTS_COUNT) || 12); // 更新 skip 值
       } else {
@@ -62,7 +54,6 @@ const ShowAllProductsPage = () => {
 
   useEffect(() => {
     fetchProducts();
-    getWebSettings();
   }, []);
 
   return loading ? (
@@ -86,7 +77,7 @@ const ShowAllProductsPage = () => {
         <div className="w-full">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {products.map((product, index) => (
-              <ProductCard product={product} key={index} isFake={isFake} />
+              <ProductCard product={product} key={index} />
             ))}
           </div>
         </div>

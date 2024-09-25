@@ -5,6 +5,8 @@ import useCart from "@/app/lib/hooks/useCart";
 import { ExchangeAndShipping } from "@prisma/client";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSettings } from "@/app/lib/hooks/useSettings";
+import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
 
 interface ProductInfoProps {
   productInfo: ProductType | undefined;
@@ -16,53 +18,36 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
   );
   const [selectedSize, setSelectedSize] = useState<string>(productInfo?.sizes ? productInfo.sizes.split(",")[0] : "");
   const [quantity, setQuantity] = useState<number>(1);
-  const cart = useCart();
-  const [current, setCurrent] = useState<ExchangeAndShipping | null>(null);
-  const [isFake, setIsFake] = useState(0);
   const [loading, setLoading] = useState(true);
-
-  const getWebSettings = async () => {
-    try {
-      const res = await axios.get("/api/web/settings/websettings");
-      setIsFake(res.data.data.is_fake);
-      setLoading(false);
-    } catch (err) {
-      // console.log(err);
-    }
-  };
+  const cart = useCart();
+  const { setting } = useSettings();
+  const { exchangeAndShipping } = useExchangeAndShipping();
 
   useEffect(() => {
-    const savedExchange = localStorage.getItem("selectedExchange");
-    if (savedExchange) {
-      try {
-        setCurrent(JSON.parse(savedExchange)); // 解析 JSON 字符串为对象
-      } catch (error) {
-        console.error("Failed to parse saved exchange", error);
-        setCurrent(null); // 解析失败时，设置为 null
-      }
-    } else {
-      setCurrent(null); // 如果 localStorage 中没有数据，设置为 null
+    if (productInfo) {
+      setLoading(false);
     }
-    getWebSettings();
-  }, []);
+  }, [productInfo]);
 
   // 产品价格规则
   let price;
   let discount;
   // 根据汇率显示价格,基础价格参考人民币
   if (productInfo && productInfo.price) {
-    price = Math.ceil(productInfo.price * (current?.exchangeRate ? current?.exchangeRate : 1)).toFixed(2);
+    price = Math.ceil(
+      productInfo.price * (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
+    ).toFixed(2);
     discount = Math.ceil(
       productInfo.price *
         (productInfo.discount ? productInfo.discount : 1) *
-        (current?.exchangeRate ? current?.exchangeRate : 1)
+        (exchangeAndShipping?.exchangeRate ? exchangeAndShipping?.exchangeRate : 1)
     ).toFixed(2);
   }
 
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {
@@ -82,7 +67,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
   //显示伪造数据
   const ProductShowDisc = (product: ProductType) => {
     let showDisc;
-    if (isFake === 1) {
+    if (setting.is_fake === 1) {
       if (product.alias_description && product.alias_description.length > 0) {
         showDisc = product.alias_description;
       } else {
@@ -112,7 +97,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
             <p className="text-gray-600 font-semibold">Category：</p>
             <p className="text-sm text-gray-600">{productInfo?.category}</p>
           </div>
-          <div className="text-xl font-semibold text-gray-800">
+          <div className="text-xl font-semibold text-gray-600 flex">
             {productInfo && price && productInfo.discount !== 1 ? (
               <div className="flex gap-2">
                 <span className="line-through text-gray-400">$ {price}</span>
@@ -121,7 +106,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
             ) : (
               <span>$ {discount}</span>
             )}
-            <span className="mx-2">{current?.currencyCode}</span>
+            <span className="mx-2">{exchangeAndShipping?.currencyCode}</span>
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-gray-600 font-semibold">Description:</p>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Popconfirm, message } from "antd";
+import { Table, Button, Popconfirm, message, Divider } from "antd";
 import { CustomerType } from "@/app/lib/types";
 import axios from "axios";
 import { TransactionOutlined } from "@ant-design/icons";
@@ -19,6 +19,7 @@ const page = () => {
   const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState<CountsType[]>([]);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const getOrders = async () => {
     try {
@@ -34,12 +35,13 @@ const page = () => {
 
   //在nextjs中是通过url路径进行缓存的，当请求的路径没有发生改变，都是默认从缓存获取。
   const getCustomers = async () => {
+    setBtnLoading(true);
     try {
-      const res = await fetch(`/api/admin/customers`);
-      if (res.ok) {
-        const data = await res.json();
-        setCustomers(data.data);
+      const res = await axios.get(`/api/admin/customers`);
+      if (res.status === 200) {
+        setCustomers(res.data.data);
         setLoading(false);
+        setBtnLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -118,7 +120,18 @@ const page = () => {
         ) : null,
     },
   ];
-  return <Table dataSource={customers} columns={columns} rowKey="id" size="small" loading={loading} />;
+  return (
+    <div className="w-full">
+      <div className="text-2xl font-semibold">客户管理</div>
+      <Divider />
+      <div className="mb-2">
+        <Button type="primary" onClick={getCustomers} loading={btnLoading}>
+          {btnLoading ? "Loading..." : "同步最新数据"}
+        </Button>
+      </div>
+      <Table dataSource={customers} columns={columns} rowKey="id" size="small" loading={loading} />
+    </div>
+  );
 };
 
 export default page;

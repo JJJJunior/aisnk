@@ -1,7 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import SubcribeFrom from "./SubcribeFrom";
 
 const Footer = () => {
   return (
@@ -14,10 +13,7 @@ const Footer = () => {
             <div>AISNK.com</div>
             <div className="font-semibold text-lg">👟 Subscribe for exclusive sneaker news!</div>
             <div className="flex w-full md:max-w-sm md:items-center space-x-2">
-              <Input type="email" placeholder="Email" />
-              <Button type="submit" size="lg" className="outline-non bg-white text-black  hover:text-white">
-                Subscribe
-              </Button>
+              <SubcribeFrom />
             </div>
           </div>
           <div className="flex flex-col gap-4 underline">

@@ -284,3 +284,14 @@ model Settings {
 
   @@map("admin_settings")
 }
+
+model Subscription {
+  id         Int      @id @default(autoincrement())
+  email      String
+  status     Int
+  visitor_id String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@map("admin_subscriptions")
+}

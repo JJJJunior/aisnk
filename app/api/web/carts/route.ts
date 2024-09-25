@@ -1,8 +1,14 @@
 import { prisma } from "@/prisma/db";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
 //同步购物车逻辑
 export const POST = async (req: NextRequest) => {
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   const { customerId, cartItems } = await req.json();
 
   if (!customerId || !Array.isArray(cartItems)) {

@@ -2,7 +2,6 @@ import { prisma } from "@/prisma/db";
 import { NextResponse, NextRequest } from "next/server";
 
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  console.log(params.id);
   if (!params.id) {
     return NextResponse.json({ message: "id is required" }, { status: 400 });
   }
