@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/db";
 
+//这句话忽略缓存机制，很好用
+export const revalidate = 0;
 export const GET = async () => {
   try {
     // 获取所有 isRef 为 1 的客户
