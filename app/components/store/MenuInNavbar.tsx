@@ -45,7 +45,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, on
   };
 
   return (
-    <div>
+    <>
       <div className="flex gap-2 justify-center items-center hover:cursor-pointer hover:text-gray-400">
         {/* 点击时触发 onToggle */}
         <h1 onMouseOver={onToggle}>{content?.name}</h1>
@@ -55,7 +55,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, on
       {/* Menu with transition */}
       <ul
         onMouseLeave={onToggle}
-        className={`w-auto absolute z-30 bg-white p-12 shadow-lg rounded-lg top-[10px] left-[140px] flex flex-col gap-2 md:top-[80px] md:left-[240px] md:w-[800px] md:grid md:grid-cols-6 md:gap-12 transition-all duration-300 ease-in-out transform ${
+        className={`w-auto mx-auto absolute z-30 bg-white shadow-lg rounded-lg flex flex-col gap-2 px-12 py-12 top-0 left-[120px] items-start md:grid md:grid-cols-6 md:gap-12 md:p-12 md:top-24 transition-all duration-300 ease-in-out transform ${
           isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
@@ -72,7 +72,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, on
             </div>
           ))}
       </ul>
-    </div>
+    </>
   );
 };
 

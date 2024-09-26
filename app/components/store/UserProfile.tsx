@@ -3,26 +3,23 @@ import React, { useEffect, useState } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import useCart from "@/app/lib/hooks/useCart";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Cart } from "./Cart";
 import { CustomerType } from "@/app/lib/types";
 import axios from "axios";
 import useRefTracker from "@/app/lib/hooks/useRefTracker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandGroup, CommandItem, CommandList, Command } from "@/components/ui/command";
-import { UserIcon, LogOutIcon } from "lucide-react";
+import { UserIcon, LogOutIcon, CircleUserIcon, UserCircleIcon } from "lucide-react";
 import { useCustomer } from "@/app/lib/hooks/useCustomer";
 
 //用户使用clerk登录后
 const UserProfile = () => {
   const { user } = useUser();
   const router = useRouter();
-  const { cartItems } = useCart();
   const { refId } = useRefTracker();
   const [open, setOpen] = useState(false);
   const { signOut } = useClerk();
   const { addCustomerInfo, customer } = useCustomer();
+  const [openUser, setOpenUser] = useState(false);
 
   //如果有推荐人，将推荐码保存在数据库
   const createCustomer = async (user: CustomerType) => {
@@ -78,6 +75,9 @@ const UserProfile = () => {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const openUserDiv = () => {
+    setOpenUser((openUser) => !openUser);
+  };
   // console.log(user);
   return (
     <div className="flex gap-8">
@@ -125,27 +125,33 @@ const UserProfile = () => {
           )}
         </div>
       ) : (
-        <div className="flex gap-4">
-          <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-in")}>
-            Login
-          </Button>
-          <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-up")}>
-            Register
-          </Button>
+        <div className="relative">
+          <UserCircleIcon
+            className="hover:text-gray-400 cursor-pointer lg:hidden"
+            size={30}
+            onClick={() => setOpenUser(!openUser)}
+          />
+          {openUser ? (
+            <div className="flex flex-col gap-2 top-10 right-1 absolute bg-white p-12 z-30 rounded-lg shadow-lg">
+              <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-in")}>
+                Login
+              </Button>
+              <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-up")}>
+                Register
+              </Button>
+            </div>
+          ) : (
+            <div className="hidden lg:flex lg:gap-2">
+              <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-in")}>
+                Login
+              </Button>
+              <Button className="hover:text-gray-300" onClick={() => router.push("/web/sign-up")}>
+                Register
+              </Button>
+            </div>
+          )}
         </div>
       )}
-      <div>
-        {cartItems && cartItems.length > 0 ? (
-          <span className="relative">
-            <Cart />
-            <p className="absolute bottom-8 left-6 text-sm w-4 h-4 rounded-full bg-red-600 flex justify-center items-center text-white">
-              {cartItems.length}
-            </p>
-          </span>
-        ) : (
-          <Cart />
-        )}
-      </div>
     </div>
   );
 };
