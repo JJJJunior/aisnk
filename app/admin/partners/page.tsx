@@ -17,6 +17,7 @@ const page = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps["confirm"], dataIndex: DataIndex) => {
     confirm();
@@ -101,18 +102,18 @@ const page = () => {
   });
 
   //在nextjs中是通过url路径进行缓存的，当请求的路径没有发生改变，都是默认从缓存获取。
-  const getPartners = async () => {
-    try {
-      const res = await fetch(`/api/admin/partners`);
-      if (res.ok) {
-        const data = await res.json();
-        // console.log(data.data);
-        setPartners(data.data);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error(err);
+  const fetchPartners = async () => {
+    setBtnLoading(true);
+    const res = await fetch(`/api/admin/partners`, {
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
     }
+    const data = await res.json();
+    setBtnLoading(false);
+    setLoading(false);
+    setPartners(data.data);
   };
   // console.log(partners);
 
@@ -121,7 +122,7 @@ const page = () => {
       const res = await axios.put(`/api/admin/customers/cancel/${record.id}`);
       if (res.status === 200) {
         message.success("取消合作商成功");
-        getPartners();
+        fetchPartners();
       }
     } catch (err) {
       // console.error(err);
@@ -129,7 +130,7 @@ const page = () => {
   };
 
   useEffect(() => {
-    getPartners();
+    fetchPartners();
   }, []);
 
   const columns: TableColumnsType<PartnerType> = [
@@ -200,6 +201,11 @@ const page = () => {
     <div className="w-full">
       <div className="text-2xl font-semibold">合作商管理</div>
       <Divider />
+      <div className="mb-2">
+        <Button type="primary" onClick={fetchPartners} loading={btnLoading}>
+          {btnLoading ? "Loading..." : "同步最新数据"}
+        </Button>
+      </div>
       <Table
         dataSource={partners}
         columns={columns}

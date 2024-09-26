@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { ProductType } from "@/app/lib/types";
 import useCart from "@/app/lib/hooks/useCart";
-import { ExchangeAndShipping } from "@prisma/client";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/app/lib/hooks/useSettings";
 import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
@@ -85,19 +83,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
   };
   // console.log(productInfo);
   return (
-    <div className="flex flex-col gap-4 lg:flex-1">
+    <div className="h-full w-auto">
       {loading ? (
         <Skeleton className="h-[640px] w-full rounded-xl" />
       ) : (
         <>
-          <div className="flex justify-between items-center">
+          <div className="w-auto mb-6">
             <p className="text-2xl font-semibold">{productInfo && ProductShowTitle(productInfo)}</p>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center mb-6">
             <p className="text-gray-600 font-semibold">Category：</p>
             <p className="text-sm text-gray-600">{productInfo?.category}</p>
           </div>
-          <div className="text-xl font-semibold text-gray-600 flex">
+          <div className="text-xl font-semibold text-gray-600 flex mb-6">
             {productInfo && price && productInfo.discount !== 1 ? (
               <div className="flex gap-2">
                 <span className="line-through text-gray-400">$ {price}</span>
@@ -108,13 +106,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
             )}
             <span className="mx-2">{exchangeAndShipping?.currencyCode}</span>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mb-6">
             <p className="text-gray-600 font-semibold">Description:</p>
             <p className="text-sm text-gray-600">{productInfo && ProductShowDisc(productInfo)}</p>
           </div>
           {productInfo?.colors
             ? productInfo.colors.split(",").length > 0 && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mb-6">
                   <div className="text-gray-600 font-semibold">Colors:</div>
                   <div className="flex gap-2 flex-wrap">
                     {productInfo.colors.split(",").map((color, index) => (
@@ -134,7 +132,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
             : null}
           {productInfo?.sizes
             ? productInfo.sizes.split(",").length > 0 && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mb-6">
                   <p className="text-gray-600 font-semibold">Sizes:</p>
                   <div className="flex gap-2 flex-wrap">
                     {productInfo.sizes.split(",").map((size, index) => (

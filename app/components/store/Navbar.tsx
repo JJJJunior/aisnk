@@ -45,8 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
   };
 
   return (
-    <div className="bg-white">
-      <div className="mx-4 h-20 lg:mx-16 lg:h-28 flex justify-between items-center lg:relative">
+    <div className="bg-white w-full">
+      <div className="mx-auto h-20 px-6 md:px-12 lg:h-28 flex justify-between items-center lg:relative">
         {/* Logo */}
         <div className="text-xl hidden md:block left-20 md:text-xl lg:text-3xl font-semibold">
           <Link href="/web">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
 
         {/* Dropdown Navbar for mobile (visible when open) */}
         {open && (
-          <nav className="absolute top-28 left-0 z-20 right-0 bg-gray-100 p-4 flex flex-col items-start list-none gap-12 text-lg font-semibold text-gray-600 md:hidden">
+          <nav className="w-full mx-auto px-2 md:px-12 absolute top-28 left-0 z-20 right-0 bg-gray-100 p-4 flex flex-col items-start list-none gap-12 text-lg md:font-semibold text-gray-600 md:hidden">
             <li className="transition duration-300 ease-in-out transform hover:text-red-200 hover:underline">
               <Link href="/web">Home</Link>
             </li>

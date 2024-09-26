@@ -59,7 +59,7 @@ const ShowAllProductsPage = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="mx-2 md:mx-12 flex flex-col items-center mt-6">
+    <div className="w-full mx-auto px-2 md:px-12 flex flex-col items-center mt-6">
       <div className="flex flex-col justify-between items-center text-2xl font-semibold text-gray-600 mb-6">
         All Products
       </div>

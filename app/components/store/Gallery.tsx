@@ -33,18 +33,18 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
   }, [setting.is_fake]);
 
   return (
-    <div className="flex flex-col gap-3 lg:flex-1 h-auto">
+    <div className="flex flex-col gap-6">
       {loading ? (
         <Skeleton className="h-[500px] w-full rounded-xl" />
       ) : (
-        <div className="md:w-[500px]">
+        <div className="w-auto">
           <AntImage src={`/api/images?file=${mainImage}`} placeholder={true} />
         </div>
       )}
       {loading ? (
         <Skeleton className="h-[120px] w-full rounded-xl" />
       ) : (
-        <div className="flex gap-2 md:w-[500px] overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
+        <div className="flex gap-2 overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
           {testImages.length > 0 &&
             testImages.map((item, index) => (
               <Image

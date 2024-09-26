@@ -4,8 +4,8 @@ import SubcribeFrom from "./SubcribeFrom";
 
 const Footer = () => {
   return (
-    <div className="mt-12 bg-black text-white">
-      <div className="mx-6 md:mx-12 p-6 flex flex-col justify-between gap-6">
+    <div className="w-full mx-auto mt-12 bg-black text-white">
+      <div className="flex flex-col p-12 justify-between gap-6">
         <div className="flex flex-col md:flex md:flex-row gap-6 md:justify-around md:items-center">
           <div className="flex flex-col gap-4">
             <div>SHOWROOM INFORMATION:</div>
@@ -23,7 +23,7 @@ const Footer = () => {
             <Link href="/web/service/privacy-policy">Privacy Policy</Link>
           </div>
         </div>
-        <div className="my-6 text-center">© 2024, AISNK.</div>
+        <div className="text-center">© 2024, AISNK.</div>
       </div>
     </div>
   );

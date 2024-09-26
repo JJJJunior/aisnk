@@ -20,7 +20,7 @@ const TopCollection: React.FC<HotProductsInRowProps> = async ({ websetting }) =>
     },
   });
   return (
-    <div className="mx-6 md:mx-12 mt-12">
+    <div className="w-full mx-auto px-6 md:px-12 mt-12">
       <div className="flex justify-between items-center">
         <div className="text-2xl font-semibold text-gray-600 mb-6">Top Collection</div>
       </div>

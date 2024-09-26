@@ -49,7 +49,7 @@ const Collections: React.FC<CollectionsProps> = async ({ params }) => {
   }
 
   return (
-    <div className="mx-6 flex flex-col items-center mt-6 max-md:mx-2 max-md:mt-2">
+    <div className="w-full mx-auto px-2 md:px-12 flex flex-col items-center mt-6">
       <div className="flex flex-col justify-between items-center">
         <Image
           src={await ImageUrl(collection.images)}

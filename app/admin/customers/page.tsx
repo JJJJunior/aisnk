@@ -37,9 +37,12 @@ const page = () => {
   const getCustomers = async () => {
     setBtnLoading(true);
     try {
-      const res = await axios.get(`/api/admin/customers`);
-      if (res.status === 200) {
-        setCustomers(res.data.data);
+      const res = await fetch(`/api/admin/customers`, {
+        cache: "no-cache",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCustomers(data.data);
         setLoading(false);
         setBtnLoading(false);
       }

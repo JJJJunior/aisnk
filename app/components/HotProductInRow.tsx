@@ -76,9 +76,9 @@ const HotProductsInRow: React.FC<HotProductsInRowProps> = async ({ websetting })
   };
 
   return (
-    <div className="mx-6 md:mx-12 mt-12">
-      <div className="flex justify-between items-center">
-        <div className="text-2xl font-semibold text-gray-600 mb-6">Best Sellers</div>
+    <div className="w-full mx-auto px-6 md:px-12 mt-12">
+      <div className="flex justify-between items-center mb-2">
+        <div className="md:text-2xl font-semibold text-gray-600">Best Sellers</div>
         <Link
           href="/web/collections/all"
           className="font-semibold flex gap-2 justify-center items-center hover:text-gray-400 hover:text-xl"
@@ -93,15 +93,17 @@ const HotProductsInRow: React.FC<HotProductsInRowProps> = async ({ websetting })
           newProducts.map((product) => (
             <div key={product.id} className="relative shadow-md rounded-lg mb-2 hover:shadow-lg bg-white">
               <Link href={`/web/products/${handleUrl(product as ProductType)}/${product?.id}`}>
-                <div className="absolute bg-red-600 px-4 text-white rounded-md ml-2 mt-2">{product.tags}</div>
+                <div className="absolute bg-red-600 px-2 text-xs text-white rounded-md ml-2 mt-2">{product.tags}</div>
                 <div className="flex justify-center items-center">
                   <Image src={ImageUrl(product.images)} alt={String(product.id)} width={300} height={400} />
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4">
-                  <div className="text-xs font-semibold text-gray-400 text-center w-[180px]">
+                  <div className="text-xs text-gray-400 text-center px-2">
                     {ProductShowTitle(product as ProductType)}
                   </div>
-                  <div className="text-sm font-semibold text-gray-600 mb-6">{product.category}</div>
+                  <div className="text-xs md:text-sm px-2 text-center md:font-semibold text-gray-600 mb-6">
+                    {product.category}
+                  </div>
                 </div>
               </Link>
             </div>

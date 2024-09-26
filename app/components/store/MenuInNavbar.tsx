@@ -55,7 +55,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, on
       {/* Menu with transition */}
       <ul
         onMouseLeave={onToggle}
-        className={`absolute z-30 bg-white p-12 shadow-lg rounded-lg top-[10px] left-[160px] w-2/3 flex flex-col gap-2 md:top-[80px] md:left-[240px] md:w-[800px] md:grid md:grid-cols-6 md:gap-12 transition-all duration-300 ease-in-out transform ${
+        className={`w-auto absolute z-30 bg-white p-12 shadow-lg rounded-lg top-[10px] left-[140px] flex flex-col gap-2 md:top-[80px] md:left-[240px] md:w-[800px] md:grid md:grid-cols-6 md:gap-12 transition-all duration-300 ease-in-out transform ${
           isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
