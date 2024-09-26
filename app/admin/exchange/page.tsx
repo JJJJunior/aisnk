@@ -72,7 +72,7 @@ const Exchange = () => {
       render: (_: any, record: ExchangeAndShippingType) => {
         return (
           <div>
-            {record.courtyName} {record.englishCoutryName}
+            {record.courtryName} {record.englishCoutryName}
           </div>
         );
       },
@@ -126,7 +126,7 @@ const Exchange = () => {
                 form.setFieldsValue({
                   id: record.id,
                   code: record.code,
-                  courtyName: record.courtyName,
+                  courtyName: record.courtryName,
                   englishCoutryName: record.englishCoutryName,
                   currencyCode: record.currencyCode,
                   exchangeRate: record.exchangeRate,

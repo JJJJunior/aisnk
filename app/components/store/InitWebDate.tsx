@@ -6,7 +6,7 @@ import axios from "axios";
 import { useSettings } from "@/app/lib/hooks/useSettings";
 
 const InitWebDate = () => {
-  const { addInfo } = useCustomer();
+  const { addCustomerInfo } = useCustomer();
   const { addSetting } = useSettings();
   const { userId } = useAuth();
 
@@ -16,7 +16,7 @@ const InitWebDate = () => {
       const res = await axios.get(`/api/web/customers/${userId}`);
       if (res.status === 200) {
         // console.log("getCustomerInfo-----initweb--------", res.data.data);
-        addInfo(res.data.data);
+        addCustomerInfo(res.data.data);
       }
     } catch (err) {
       // console.log(err);

@@ -19,7 +19,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CartType, CustomerType } from "@/app/lib/types";
 import useRefTracker from "@/app/lib/hooks/useRefTracker";
-import { ExchangeAndShippingType } from "@/app/lib/types";
 import { ImageType, ProductType } from "@/app/lib/types";
 import { useSettings } from "@/app/lib/hooks/useSettings";
 import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
@@ -35,8 +34,6 @@ export function Cart() {
   const [loading, setLoading] = useState(false);
   // 读取网站设置数据
   const { setting } = useSettings();
-
-  // console.log(exchangeAndShipping);
 
   // (cartItem.item.price ?? 0) * currentRate
   const total = cartItems.reduce((acc, cartItem) => {
@@ -106,16 +103,29 @@ export function Cart() {
       if (!user) {
         router.push("/sign-in");
       }
-      if (!exchangeAndShipping) return;
+      if (exchangeAndShipping === undefined) return;
       const payData = JSON.stringify({
         cartItems: cartItems,
         customer,
         exchangeAndShipping,
       });
-      // console.log(payData);
-      const res = await axios.post(`/api/web/checkout`, payData);
-      const data = await res.data;
-      window.location.href = data.url;
+      // console.log("payData", payData);
+      try {
+        const res = await fetch(`/api/web/checkout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: payData,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          // console.log(data);
+          window.location.href = data.url;
+        }
+      } catch (err) {
+        console.log("[handlePayment_catch]", err);
+      }
     } catch (err) {
       console.log("[checkout_POST]", err);
     } finally {

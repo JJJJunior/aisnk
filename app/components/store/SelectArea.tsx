@@ -23,7 +23,7 @@ export const SelectArea = () => {
     try {
       const res = await axios.get("/api/exchange");
       setExchange(res.data.data);
-      addExchangeAndShipping(res.data.data.find((item: ExchangeAndShippingType) => item.courtyName === "default"));
+      addExchangeAndShipping(res.data.data.find((item: ExchangeAndShippingType) => item.courtryName === "default"));
     } catch (err) {
       // console.error(err);
     }

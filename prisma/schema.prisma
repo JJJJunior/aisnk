@@ -251,7 +251,7 @@ model ExchangeAndShipping {
   id                      Int     @id @default(autoincrement())
   code                    String?
   currency                String?
-  courtyName              String?
+  courtryName             String?
   englishCoutryName       String?
   currencyCode            String?
   exchangeRate            Float?

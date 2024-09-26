@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { auth } from "@clerk/nextjs/server";
+import { CartItemType, CustomerType, ExchangeAndShippingType } from "@/app/lib/types";
 
 export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
   typescript: true,
@@ -18,18 +19,19 @@ export const POST = async (req: NextRequest) => {
   }
 
   try {
-    const { cartItems, customer, exchangeRateAndShipping } = await req.json();
-    if (!cartItems || !customer || !exchangeRateAndShipping) {
+    const { cartItems, customer, exchangeAndShipping } = await req.json();
+    // console.log(exchangeAndShipping);
+    if (!cartItems || !customer || !exchangeAndShipping) {
       return new NextResponse("Not enough data to checkout", { status: 400 });
     }
     //付款信息交互
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: exchangeRateAndShipping.paymentTypeInStripe.split(","),
+      payment_method_types: exchangeAndShipping.paymentTypeInStripe.split(","),
       mode: "payment",
       shipping_address_collection: {
-        allowed_countries: exchangeRateAndShipping.allowedCountries.split(","),
+        allowed_countries: exchangeAndShipping.allowedCountries.split(","),
       },
-      shipping_options: [{ shipping_rate: exchangeRateAndShipping.shippingCodeInStripe.trim() }],
+      shipping_options: [{ shipping_rate: exchangeAndShipping.shippingCodeInStripe.trim() }],
       line_items: cartItems.map((cartItem: any) => ({
         price_data: {
           currency: "usd",
@@ -46,12 +48,10 @@ export const POST = async (req: NextRequest) => {
             ? Math.ceil(
                 cartItem.item.discount *
                   cartItem.item.price *
-                  exchangeRateAndShipping.exchangeRate *
-                  exchangeRateAndShipping.toUSDRate
+                  exchangeAndShipping.exchangeRate *
+                  exchangeAndShipping.toUSDRate
               ) * 100
-            : Math.ceil(
-                cartItem.item.price * exchangeRateAndShipping.exchangeRate * exchangeRateAndShipping.toUSDRate
-              ) * 100,
+            : Math.ceil(cartItem.item.price * exchangeAndShipping.exchangeRate * exchangeAndShipping.toUSDRate) * 100,
         },
         quantity: cartItem.quantity,
       })),
