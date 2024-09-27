@@ -26,6 +26,8 @@ const page = () => {
     }
   };
 
+  // console.log(links);
+
   const findSettingsAndCreate = async () => {
     try {
       const res = await axios.get(`/api/admin/settings/websettings`);

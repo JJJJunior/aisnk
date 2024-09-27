@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Table, Button, Popconfirm, message, Input, Space, Divider } from "antd";
 import axios from "axios";
-import QrcodePage from "@/app/components/Qrcode";
 import Highlighter from "react-highlight-words";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import type { InputRef, TableColumnType, TableColumnsType } from "antd";
@@ -151,20 +150,6 @@ const page = () => {
       dataIndex: "referralCode",
       key: "referralCode",
       ...getColumnSearchProps("referralCode"),
-    },
-    {
-      title: "推荐链接（勿多次生成）",
-      dataIndex: "referralCode",
-      key: "referralCode",
-      render: (referralCode: string) =>
-        referralCode ? (
-          <div>
-            <QrcodePage url={`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${referralCode}`} />
-            <div>{`${window.location.href.split("/").slice(0, 3).join("/")}/web?ref=${referralCode}`}</div>
-          </div>
-        ) : (
-          ""
-        ),
     },
     {
       title: "推广注册数",
