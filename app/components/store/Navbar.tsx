@@ -63,8 +63,8 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
           <li className="text-red-500 transition duration-300 ease-in-out transform hover:text-red-200 hover:underline">
             <Link href="/web/sale">SALE</Link>
           </li>
-          <li className="transition duration-300 ease-in-out transform hover:text-gray-400">
-            <Link href="/web/collections/all">Products</Link>
+          <li className="transition duration-300 ease-in-out transform text-green-600 hover:text-green-300 hover:underline">
+            <Link href="/web/collections/all">ALL</Link>
           </li>
           <li className="transition duration-300 ease-in-out transform hover:text-gray-400 md:hidden lg:block">
             <Link href="/web/service/contact-us">Service</Link>

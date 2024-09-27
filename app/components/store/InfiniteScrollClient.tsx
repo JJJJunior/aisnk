@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProductCard from "@/app/components/store/ProductCard";
 import { usePathname } from "next/navigation";
-import { ProductCollectionType } from "@/app/lib/types";
+import { ProductCollectionType, ProductType } from "@/app/lib/types";
 import Loader from "../Loader";
 
 interface InfiniteScrollClientProps {
@@ -44,9 +44,7 @@ const InfiniteScrollClient: React.FC<InfiniteScrollClientProps> = ({ iniCollecti
     }
   };
 
-  return loading ? (
-    <Loader /> // 初始 loading 状态时显示的组件
-  ) : (
+  return (
     <InfiniteScroll
       dataLength={collectionProducts.length} // 当前已加载的数据长度
       next={fetchMoreProducts} // 加载更多数据的函数
@@ -54,7 +52,7 @@ const InfiniteScrollClient: React.FC<InfiniteScrollClientProps> = ({ iniCollecti
       loader={<Loader />} // 加载中时显示的组件
       endMessage={<p className="my-20 text-center">"There's no more content here. 😉"</p>} // 数据加载完毕时显示的组件
     >
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+      <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6`}>
         {collectionProducts.map((item, index) => (
           <ProductCard product={item.product && item.product} key={index} />
         ))}
