@@ -22,6 +22,7 @@ export const GET = async (req: NextRequest) => {
           },
           price: true,
           discount: true,
+          code: true,
           title: true,
           id: true,
           status: true,

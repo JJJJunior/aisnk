@@ -157,7 +157,8 @@ const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
               }
             })}
         </Link>
-        <div className="text-xs mt-1 mx-2 text-gray-700 mb-2 text-center">{product && ProductShowTitle(product)}</div>
+        <div className="text-xs mt-1 mx-2 text-gray-700 mb-1 text-center">{product && ProductShowTitle(product)}</div>
+        <div className="text-xs mt-1 mx-2 text-gray-400 mb-2 text-center">{product?.code}</div>
       </div>
       <div>
         <div className="mx-2 text-xs font-semibold text-gray-600 flex gap-2 justify-center items-center">

@@ -1,12 +1,12 @@
-import { Fingerprint, Headset, ThumbsUpIcon, Undo2 } from "lucide-react";
+import { Fingerprint, Headset, ShipIcon, ThumbsUpIcon, Undo2 } from "lucide-react";
 import React from "react";
 
 const Promise = () => {
   return (
     <div className="w-full mx-auto h-14 my-4 justify-around items-center hidden lg:flex">
       <div className="flex gap-4">
-        <Fingerprint />
-        <div>Authentic Products</div>
+        <ShipIcon />
+        <div>Ships within 12 hours</div>
       </div>
       <div className="flex gap-4">
         <Undo2 />

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Image as AntImage } from "antd";
+import { Image as AntImage, Space } from "antd";
 import { ImageType } from "@/app/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/app/lib/hooks/useSettings";
@@ -15,6 +15,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
   const [mainImage, setMainImage] = useState("");
   const [loading, setLoading] = useState(true);
   const { setting } = useSettings();
+  const [random, setRandom] = useState<number>();
 
   useEffect(() => {
     if (images) {
@@ -35,16 +36,16 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
   return (
     <div className="flex flex-col gap-6">
       {loading ? (
-        <Skeleton className="h-[500px] w-full rounded-xl" />
+        <Skeleton className="w-full rounded-xl" />
       ) : (
         <div className="w-auto">
-          <AntImage src={`/api/images?file=${mainImage}`} placeholder={true} />
+          <AntImage src={`/api/images?file=${mainImage}`} style={{ width: "100%", maxWidth: "500px" }} />
         </div>
       )}
       {loading ? (
         <Skeleton className="h-[120px] w-full rounded-xl" />
       ) : (
-        <div className="flex gap-2 overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
+        <div className="flex gap-2 md:max-w-[500px] overflow-auto scrollbar scrollbar-thumb-blue-600 scrollbar-track-gray-100">
           {testImages.length > 0 &&
             testImages.map((item, index) => (
               <Image

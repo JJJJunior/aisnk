@@ -11,7 +11,7 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider>
-      <div className="h-screen w-full mx-auto">
+      <div className="h-screen">
         <Notication />
         <NavbarPage />
         <Toaster position="top-center" />

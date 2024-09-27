@@ -26,6 +26,7 @@ const RecomendCollection: React.FC<RecomendCollectionProps> = async ({ websettin
       price: true,
       discount: true,
       id: true,
+      code: true,
       tags: true,
       category: true,
     },
@@ -100,6 +101,7 @@ const RecomendCollection: React.FC<RecomendCollectionProps> = async ({ websettin
                   <Image src={ImageUrl(product.images)} alt={String(product.id)} width={300} height={400} />
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4">
+                  <div className="text-xs text-gray-400 text-center px-2">{product.code}</div>
                   <div className="text-xs text-gray-400 text-center px-2">
                     {ProductShowTitle(product as ProductType)}
                   </div>

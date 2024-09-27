@@ -19,6 +19,7 @@ const SalePage = async () => {
       discount: true,
       tags: true,
       category: true,
+      code: true,
       size_image: true,
       sizes: true,
       colors: true,

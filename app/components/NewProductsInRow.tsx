@@ -24,6 +24,7 @@ const NewProductsInRow: React.FC<NewProductsInRowProps> = async ({ websetting })
       title: true,
       alias_title: true,
       price: true,
+      code: true,
       discount: true,
       id: true,
       tags: true,
@@ -99,6 +100,7 @@ const NewProductsInRow: React.FC<NewProductsInRowProps> = async ({ websetting })
                   <Image src={ImageUrl(product.images)} alt={String(product.id)} width={300} height={400} />
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4">
+                  <div className="text-xs text-gray-400 text-center px-2">{product.code}</div>
                   <div className="text-xs text-gray-400 text-center px-2">
                     {ProductShowTitle(product as ProductType)}
                   </div>

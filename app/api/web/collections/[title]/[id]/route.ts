@@ -34,6 +34,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: number }
                 title: true,
                 status: true,
                 category: true,
+                code: true,
                 tags: true,
                 size_image: true,
                 colors: true,

@@ -92,6 +92,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
             <p className="text-2xl font-semibold">{productInfo && ProductShowTitle(productInfo)}</p>
           </div>
           <div className="flex gap-2 items-center mb-6">
+            <p className="text-gray-600 font-semibold">SKU:</p>
+            <p className="text-sm text-gray-600">{productInfo?.code}</p>
+          </div>
+          <div className="flex gap-2 items-center mb-6">
             <p className="text-gray-600 font-semibold">Category：</p>
             <p className="text-sm text-gray-600">{productInfo?.category}</p>
           </div>
