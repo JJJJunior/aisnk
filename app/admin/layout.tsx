@@ -16,6 +16,7 @@ import {
   TransactionOutlined,
   SettingOutlined,
   LikeOutlined,
+  SoundOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
@@ -46,6 +47,7 @@ const items: MenuItem[] = [
   { key: "/admin/exchange", icon: <TransactionOutlined />, label: "汇率及运费管理" },
   { key: "/admin/users", icon: <UserOutlined />, label: "用户管理" },
   { key: "/admin/logs", icon: <SecurityScanOutlined />, label: "日志管理" },
+  { key: "/admin/qa", icon: <SoundOutlined />, label: "网站问答" },
   { key: "/admin/settings", icon: <SettingOutlined />, label: "网站设置" },
   { key: "/admin/logout", icon: <LogoutOutlined />, label: "退出登录" },
 ];

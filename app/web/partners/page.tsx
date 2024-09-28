@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCustomer } from "@/app/lib/hooks/useCustomer";
 import { PartnerType } from "@/app/lib/types";
 import QrcodePage from "@/app/components/Qrcode";
-import { custom } from "zod";
 
 const Partners = () => {
   const { customer } = useCustomer();
@@ -27,7 +26,7 @@ const Partners = () => {
     }
   };
 
-  console.log(partner);
+  // console.log(partner);
 
   useEffect(() => {
     if (customer.id) {
@@ -36,7 +35,7 @@ const Partners = () => {
   }, [customer.id]);
 
   return (
-    <div>
+    <div className="w-full mx-auto px-2 md:px-12">
       {customer.is_partner === true && (
         <div>
           <div className="flex flex-col lg:flex lg:flex-row gap-12 h-[400]px p-4 rounded-lg my-6">

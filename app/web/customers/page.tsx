@@ -34,8 +34,8 @@ const Customers = () => {
   }
 
   return (
-    <div className="mx-4 h-full mt-6 md:mx-16 md:mt-12">
-      <div className="p-4 text-xs h-auto w-full md:h-auto shadow-lg rounded-lg text-gray-600 mb-6">
+    <div className="w-full mx-auto px-2 md:px-12 mt-12 h-[300px]">
+      <div className="p-4 text-xs w-full md:h-auto shadow-lg rounded-lg text-gray-600 mb-6">
         <div className="font-semibold text-gray-600">Your Purchase Orders:</div>
         <div>
           {customer.Orders &&
