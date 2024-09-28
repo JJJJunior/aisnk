@@ -36,7 +36,7 @@ const HotProductsInRow: React.FC<HotProductsInRowProps> = async ({ websetting })
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (websetting?.is_fake === 1) {
+    if (websetting?.value === "1") {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -46,7 +46,7 @@ const HotProductsInRow: React.FC<HotProductsInRowProps> = async ({ websetting })
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (websetting?.is_fake === 1) {
+    if (websetting?.value === "1") {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {

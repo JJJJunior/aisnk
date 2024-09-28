@@ -10,7 +10,7 @@ import axios from "axios";
 const page = () => {
   const [qas, setQas] = useState<QAType[]>([]);
   const [currentQA, setCurrentQA] = useState<QAType>();
-  const [settings, setSettings] = useState<SettingsType | null>(null);
+  const [setting, setSetting] = useState<SettingsType | null>(null);
   const [loading, setLoading] = useState(true);
 
   // console.log(settings);
@@ -26,22 +26,33 @@ const page = () => {
     }
   };
 
-  // console.log(links);
-
   const findSettingsAndCreate = async () => {
     try {
-      const res = await axios.get(`/api/admin/settings/websettings`);
-      if (res.status === 200) {
+      const res = await fetch(`/api/admin/settings/show`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const exsistData = await res.json();
         // console.log(res.data.data);
-        if (res.data.data === null) {
+        if (exsistData === null) {
           // 创建网站信息
-          const create_res = await axios.post("/api/admin/settings", {
-            key: "websettings",
-            is_fake: 0,
+          const create_res = await fetch("/api/admin/settings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              key: "show",
+              value: "0",
+            }),
           });
-          setSettings(create_res.data.data);
+          const createData = await create_res.json();
+          setSetting(createData);
         } else {
-          setSettings(res.data.data);
+          setSetting(exsistData);
         }
       }
     } catch (err) {
@@ -70,8 +81,8 @@ const page = () => {
   const showFakeInfo = async (checked: boolean) => {
     // console.log(`switch to ${checked}`);
     try {
-      const res = await axios.put(`/api/admin/settings/websettings`, {
-        is_fake: checked ? 1 : 0,
+      const res = await axios.put(`/api/admin/settings/show`, {
+        value: checked ? "1" : "0",
       });
       if (res.status === 200) {
         message.success("修改成功");
@@ -89,7 +100,7 @@ const page = () => {
       <div>
         <div className="flex gap-4 my-6">
           <p className="font-semibold">网站是否显示伪数据</p>
-          <Switch value={settings?.is_fake === 1 ? true : false} onChange={showFakeInfo} />
+          <Switch value={setting?.value === "1" ? true : false} onChange={showFakeInfo} />
         </div>
         <p>
           使用伪数据注意事项：1、正常产品图片不少于9张，伪数据网站呈现最后1张图片。2、栏目图片不少于2张，网站呈现最后1张。

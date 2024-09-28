@@ -7,7 +7,7 @@ export const POST = async (req: NextRequest) => {
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  const { id, username, email, firstName, lastName, createdAt, lastSignInAt, referredById } = await req.json();
+  const { id, username, email, is_partner, firstName, lastName, createdAt, lastSignInAt, refId } = await req.json();
   if (!id) {
     return NextResponse.json({ message: "id is required" }, { status: 400 });
   }
@@ -28,24 +28,52 @@ export const POST = async (req: NextRequest) => {
           firstName,
           lastName,
           createdAt,
+          is_partner,
           lastSignInAt,
         },
       });
       return NextResponse.json({ message: "customer in db" }, { status: 200 });
     }
-    await prisma.customer.create({
-      data: {
-        id,
-        username,
-        email,
-        firstName,
-        lastName,
-        createdAt,
-        lastSignInAt,
-        referredById,
-      },
-    });
-    return NextResponse.json({ message: "customer created" }, { status: 200 });
+    if (refId) {
+      const referrer = await prisma.partner.findUnique({
+        where: {
+          code: refId,
+        },
+      });
+      await prisma.customer.create({
+        data: {
+          id,
+          username,
+          email,
+          firstName,
+          lastName,
+          createdAt,
+          lastSignInAt,
+          is_partner: false,
+          Partner: {
+            connect: {
+              id: referrer?.id,
+            },
+          },
+        },
+      });
+      return NextResponse.json({ message: "customer created" }, { status: 200 });
+    } else {
+      await prisma.customer.create({
+        data: {
+          id,
+          username,
+          email,
+          firstName,
+          lastName,
+          createdAt,
+          lastSignInAt,
+          is_partner: false,
+          Partner: undefined,
+        },
+      });
+      return NextResponse.json({ message: "customer created" }, { status: 200 });
+    }
   } catch (err) {
     console.log(err);
     return NextResponse.json({ message: "Server Internal errors" }, { status: 500 });

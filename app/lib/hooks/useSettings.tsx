@@ -11,13 +11,13 @@ type SettingsStore = {
 export const useSettings = create<SettingsStore>((set, get) => ({
   setting: {
     key: "",
-    is_fake: 0,
+    value: "",
   },
   addSetting: (setting: SettingsType) =>
     set((state) => ({
       setting: {
         key: setting.key,
-        is_fake: setting.is_fake,
+        value: setting.value,
       },
     })),
   settingInfo: () => get().setting,

@@ -19,14 +19,14 @@ export async function Hero() {
 
   const res = await prisma.settings.findUnique({
     where: {
-      key: "websettings",
+      key: "show",
     },
   });
 
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (res?.is_fake === 1) {
+    if (res?.value === "1") {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -49,7 +49,7 @@ export async function Hero() {
           className="rounded-full bg-white shadow-lg"
         />
       </div>
-      {res?.is_fake !== 1 && (
+      {res?.value !== "1" && (
         <div className="absolute w-[200px] md:w-[400px] lg:w-[500px] text-sm top-16 left-6 lg:left-[100px] lg:top-[120px] text-white md:text-3xl font-semibold">
           <span className="text-orange-400">{productDetail[0]?.title.split(" ").slice(0, 1).join(" ") + " "}</span>
           {productDetail[showProductIndex]?.title.split(" ").slice(1).join(" ")}

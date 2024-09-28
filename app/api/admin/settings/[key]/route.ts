@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest, { params }: { params: { key: string 
         key: params.key,
       },
     });
-    return NextResponse.json({ data: res }, { status: 200 });
+    return NextResponse.json(res, { status: 200 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: err }, { status: 500 });
@@ -19,8 +19,8 @@ export const GET = async (req: NextRequest, { params }: { params: { key: string 
 };
 
 export const PUT = async (req: NextRequest, { params }: { params: { key: string } }) => {
-  const { is_fake } = await req.json();
-  if (!params.key || is_fake === undefined || is_fake === null) {
+  const { value } = await req.json();
+  if (!params.key || !value) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
   try {
@@ -29,7 +29,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { key: string 
         key: params.key,
       },
       data: {
-        is_fake,
+        value,
       },
     });
     return NextResponse.json({ message: "Settings updated successfully" }, { status: 200 });

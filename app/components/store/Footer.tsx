@@ -6,7 +6,7 @@ import { prisma } from "@/prisma/db";
 import { ArrowBigRightIcon } from "lucide-react";
 
 const Footer = async () => {
-  const settings = await prisma.settings.findMany();
+  const settings = await prisma.settings.findMany({});
   return (
     <div className="w-full mx-auto mt-12 bg-black text-white">
       <div className="flex flex-col p-12 justify-between gap-6">

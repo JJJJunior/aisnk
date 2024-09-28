@@ -4,19 +4,20 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useSettings } from "@/app/lib/hooks/useSettings";
 
 interface MenuInNavbarProps {
   content: ParentType | null;
-  isFake: number;
   isOpen: boolean; // 从父组件传递的菜单显示状态
   onToggle: () => void; // 切换菜单的函数
 }
 
-const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, onToggle }) => {
+const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isOpen, onToggle }) => {
+  const { setting } = useSettings();
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (isFake === 1) {
+    if (setting.value === "1") {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -27,7 +28,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isFake, isOpen, on
   //显示伪造数据
   const CollectionShowTitle = (collection: CollectionType) => {
     let showTitle;
-    if (isFake === 1) {
+    if (setting.value === "1") {
       if (collection.alias_title && collection.alias_title.length > 0) {
         showTitle = collection.alias_title;
       } else {

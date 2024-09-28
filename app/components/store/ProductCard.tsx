@@ -25,6 +25,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
   const [commission, setCommission] = useState(0);
   const [commissionLoading, setCommissionLoading] = useState(false);
 
+  // console.log(customer);
   // 产品价格规则 一共三个组件使用价格:ProductCard  ProductInfo  Cart
   let price;
   let discount;
@@ -53,10 +54,11 @@ const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
     return result;
   };
 
+  // console.log(setting);
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -66,7 +68,7 @@ const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {
@@ -173,8 +175,8 @@ const ProductCard: React.FC<ProductCartProps> = ({ product }) => {
           <span className="text-gray-400 text-xs">{exchangeAndShipping?.currencyCode}</span>
         </div>
       </div>
-      {customer &&
-        customer.isRef === 1 &&
+      {customer.id &&
+        customer.is_partner &&
         (commission === 0 ? (
           <Button
             size="sm"

@@ -8,7 +8,7 @@ import axios from "axios";
 import useRefTracker from "@/app/lib/hooks/useRefTracker";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandGroup, CommandItem, CommandList, Command } from "@/components/ui/command";
-import { UserIcon, LogOutIcon, CircleUserIcon, UserCircleIcon } from "lucide-react";
+import { UserIcon, LogOutIcon, UserCircleIcon } from "lucide-react";
 import { useCustomer } from "@/app/lib/hooks/useCustomer";
 
 //用户使用clerk登录后
@@ -26,7 +26,7 @@ const UserProfile = () => {
     try {
       const res = await axios.post("/api/web/customers", {
         ...user,
-        referredById: refId ? refId : null,
+        refId: refId ? refId : null,
       });
       // console.log(res.data);
     } catch (err) {
@@ -75,9 +75,6 @@ const UserProfile = () => {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const openUserDiv = () => {
-    setOpenUser((openUser) => !openUser);
-  };
   // console.log(user);
   return (
     <div className="flex gap-8">
@@ -94,6 +91,20 @@ const UserProfile = () => {
               <Command className="rounded-lg border shadow-lg">
                 <CommandList>
                   <CommandGroup>
+                    {customer.is_partner === true && (
+                      <CommandItem>
+                        <button
+                          onClick={() => {
+                            router.push("/web/partners");
+                            setOpen(false);
+                          }}
+                          className="flex items-center w-full"
+                        >
+                          <UserIcon className="h-4 w-4 mr-2" />
+                          <span className="p-1">Partner</span>
+                        </button>
+                      </CommandItem>
+                    )}
                     <CommandItem>
                       <button
                         onClick={() => {

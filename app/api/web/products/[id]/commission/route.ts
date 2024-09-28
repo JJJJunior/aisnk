@@ -20,10 +20,10 @@ export const POST = async (req: NextRequest, { params }: { params: { id: number 
         id: customerId,
       },
       select: {
-        isRef: true,
+        is_partner: true,
       },
     });
-    if (customer?.isRef === 0) {
+    if (customer?.is_partner === false) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     const product = await prisma.product.findUnique({

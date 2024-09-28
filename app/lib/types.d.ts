@@ -194,28 +194,29 @@ export interface CustomerType {
   name?: string;
   email_stripe?: string;
   email?: string;
+  is_partner?: boolean;
   firstName?: string;
   lastName?: string;
   phone?: string;
+  Orders?: OrderType[];
   createdAt?: Date | null;
   lastSignInAt?: Date | null;
-  referralCode?: string;
-  referredById?: string;
-  isRef?: number;
+  Partner?: PartnerType;
+  partnerId?: number;
   cart?: Cart[];
 }
 
 export interface PartnerType {
-  id: string;
-  isRef: number;
-  username: string;
-  fullname: string;
-  email: string;
-  customerId: string;
-  referralCode: string;
-  refCount: number;
-  commission: number;
-  subCustomersTotalOrders: OrderType[];
+  id: number;
+  clerkId: string;
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  phone?: string;
+  code: string;
+  customers?: CustomerType[];
 }
 
 export interface CartType {
@@ -234,8 +235,8 @@ export interface QAType {
 
 export interface SettingsType {
   id?: number;
-  is_fake?: number;
-  key?: string;
+  key: string;
+  value: string;
   created_at?: Date;
   updated_at?: Date;
 }

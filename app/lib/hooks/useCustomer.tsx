@@ -11,13 +11,17 @@ type CustomerStore = {
 export const useCustomer = create<CustomerStore>((set, get) => ({
   customer: {
     id: "",
-    isRef: 0,
     username: "",
-    referralCode: "",
+    email_stripe: "",
     email: "",
-    fullName: "",
-    lastName: "",
     firstName: "",
+    lastName: "",
+    is_partner: 0,
+    name: "",
+    createdAt: null,
+    lastSignInAt: null,
+    phone: "",
+    Orders: [],
   },
 
   // 更新整个 customer 对象
@@ -25,13 +29,17 @@ export const useCustomer = create<CustomerStore>((set, get) => ({
     set((state) => ({
       customer: {
         id: customer.id,
-        isRef: customer.isRef,
         username: customer.username,
-        referralCode: customer.referralCode,
+        email_stripe: customer.email_stripe,
         email: customer.email,
-        fullName: customer.fullName,
-        lastName: customer.lastName,
         firstName: customer.firstName,
+        lastName: customer.lastName,
+        is_partner: customer.is_partner,
+        name: customer.name,
+        createdAt: customer.createdAt,
+        lastSignInAt: customer.lastSignInAt,
+        phone: customer.phone,
+        Orders: customer.Orders,
       },
     })),
 

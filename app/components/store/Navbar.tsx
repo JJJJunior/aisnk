@@ -5,7 +5,6 @@ import UserProfile from "@/app/components/store/UserProfile";
 import { SelectArea } from "./SelectArea";
 import MenuInNavbar from "./MenuInNavbar";
 import { ParentType } from "@/app/lib/types";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import useCart from "@/app/lib/hooks/useCart";
 import { Cart } from "./Cart";
@@ -18,7 +17,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null); // 用于追踪哪个菜单是打开的
   const [open, setOpen] = useState(false);
-  const [isFake, setIsFake] = useState(0);
   const [currentUrl, setCurrentUrl] = useState("");
   const pathname = usePathname();
   const { cartItems } = useCart();
@@ -30,15 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
     }
   }, [pathname]);
 
-  const getWebSettings = async () => {
-    const res = await axios.get("/api/web/settings/websettings");
-    if (res.status === 200) {
-      setIsFake(res.data.data.is_fake);
-    }
-  };
-
   useEffect(() => {
-    getWebSettings();
     setCurrentUrl(pathname);
   }, []);
 
@@ -71,13 +61,11 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
           </li>
           {/* 增加互斥功能 */}
           <MenuInNavbar
-            isFake={isFake}
             content={sneakers}
             isOpen={activeMenu === "sneakers"} // 控制菜单显示
             onToggle={() => toggleMenu("sneakers")} // 切换菜单状态
           />
           <MenuInNavbar
-            isFake={isFake}
             content={accessoires}
             isOpen={activeMenu === "accessoires"} // 控制菜单显示
             onToggle={() => toggleMenu("accessoires")} // 切换菜单状态
@@ -93,13 +81,11 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
             </li>
             <MenuInNavbar
               content={sneakers}
-              isFake={isFake}
               isOpen={activeMenu === "sneakers"}
               onToggle={() => toggleMenu("sneakers")}
             />
             <MenuInNavbar
               content={accessoires}
-              isFake={isFake}
               isOpen={activeMenu === "accessoires"}
               onToggle={() => toggleMenu("accessoires")}
             />

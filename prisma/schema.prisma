@@ -144,17 +144,34 @@ model Customer {
   email        String? //clerk
   firstName    String? //clerk
   lastName     String? //clerk
+  is_partner   Boolean?
   name         String? //stripe
   createdAt    DateTime?
   lastSignInAt DateTime?
   phone        String? //stripe
   cart         Cart[]
-  referralCode String?   @unique // 用户的推荐代码
-  referredById String? // 推荐人的ID
-  isRef        Int? //是否是推荐人
-  Order        Order[]
+  Orders       Order[]
+  Partner      Partner?  @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  partnerId    Int?
 
   @@map("admin_customers")
+}
+
+model Partner {
+  id         Int        @id @default(autoincrement())
+  clerkId    String     @unique
+  username   String? //clerk
+  email      String? //clerk
+  firstName  String? //clerk
+  lastName   String? //clerk
+  name       String? //stripe
+  phone      String? //stripe
+  code       String     @unique // 用户的推荐代码
+  customers  Customer[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+
+  @@map("admin_partners")
 }
 
 model Cart {
@@ -204,7 +221,7 @@ model Order {
   commissionPaid  Int? // 确认是否返佣
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @default(now())
-  customer        Customer?        @relation(fields: [customerId], references: [id])
+  customer        Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
   customerId      String?
   status          String?
   tracking        String? //物流单号
@@ -278,8 +295,7 @@ model QA {
 model Settings {
   id         Int      @id @default(autoincrement())
   key        String   @unique
-  is_fake    Int?
-  value      String?
+  value      String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 

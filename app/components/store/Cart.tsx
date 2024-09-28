@@ -158,7 +158,7 @@ export function Cart() {
   //显示伪造数据
   const ImageUrl = (images: ImageType[]) => {
     let url;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       url = `/api/images?file=${images[images.length - 1].url}`;
     } else {
       url = `/api/images?file=${images[0].url}`;
@@ -169,7 +169,7 @@ export function Cart() {
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {

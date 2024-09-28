@@ -24,14 +24,14 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
   }, [images]);
 
   useEffect(() => {
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       setTestImages(images.slice(9, images?.length));
       setMainImage(images[images.length - 1].url);
     } else {
       setTestImages(images.slice(0, 9));
       setMainImage(images[0].url);
     }
-  }, [setting.is_fake]);
+  }, [setting.value]);
 
   return (
     <div className="flex flex-col gap-6">

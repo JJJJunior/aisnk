@@ -9,6 +9,10 @@ export const GET = async () => {
       orderBy: {
         createdAt: "asc",
       },
+      include: {
+        Orders: true,
+        Partner: true,
+      },
     });
     return new NextResponse(JSON.stringify({ data: customers }), {
       status: 200,

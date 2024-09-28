@@ -1,9 +1,10 @@
 import { prisma } from "@/prisma/db";
 import { NextRequest, NextResponse } from "next/server";
+
 export const GET = async () => {
   try {
     const parents = await prisma.parent.findMany({});
-    return NextResponse.json({ data: parents }, { status: 200 });
+    return NextResponse.json({ parents }, { status: 200 });
   } catch (err) {
     console.log(err);
   }

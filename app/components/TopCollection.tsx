@@ -9,12 +9,12 @@ interface HotProductsInRowProps {
   websetting: SettingsType;
 }
 const TopCollection: React.FC<HotProductsInRowProps> = async ({ websetting }) => {
-  const isFake = websetting?.is_fake;
+  const isFake = websetting?.value;
   const collections = await prisma.collection.findMany({
     select: {
       id: true,
       images: {
-        take: isFake === 1 ? -1 : 1,
+        take: isFake === "1" ? -1 : 1,
       },
       products: true,
     },

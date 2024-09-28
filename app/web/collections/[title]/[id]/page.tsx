@@ -16,12 +16,12 @@ interface CollectionsProps {
 const ImageUrl = async (images: ImageType[]) => {
   const res = await prisma.settings.findUnique({
     where: {
-      key: "websettings",
+      key: "show",
     },
   });
 
   let url;
-  if (res?.is_fake === 1) {
+  if (res?.value === "1") {
     url = `/api/images?file=${images[images.length - 1].url}`;
   } else {
     url = `/api/images?file=${images[0].url}`;

@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import { useCustomer } from "@/app/lib/hooks/useCustomer";
 import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
 import { useSettings } from "@/app/lib/hooks/useSettings";
 
 const InitWebDate = () => {
@@ -13,10 +12,16 @@ const InitWebDate = () => {
   //初始化customer信息
   const getCustomerInfo = async () => {
     try {
-      const res = await axios.get(`/api/web/customers/${userId}`);
-      if (res.status === 200) {
-        // console.log("getCustomerInfo-----initweb--------", res.data.data);
-        addCustomerInfo(res.data.data);
+      const res = await fetch(`/api/web/customers/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // console.log(data);
+        addCustomerInfo(data);
       }
     } catch (err) {
       // console.log(err);
@@ -25,9 +30,16 @@ const InitWebDate = () => {
 
   //初始化网页设置
   const getWebSettings = async () => {
-    const res = await axios.get("/api/web/settings/websettings");
-    if (res.status === 200) {
-      addSetting(res.data.data);
+    const res = await fetch("/api/web/settings/show", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      // console.log(data.data);
+      addSetting(data.data);
     }
   };
 

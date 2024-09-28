@@ -45,7 +45,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
   //显示伪造数据
   const ProductShowTitle = (product: ProductType) => {
     let showTitle;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       if (product.alias_title && product.alias_title.length > 0) {
         showTitle = product.alias_title;
       } else {
@@ -65,7 +65,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ productInfo }) => {
   //显示伪造数据
   const ProductShowDisc = (product: ProductType) => {
     let showDisc;
-    if (setting.is_fake === 1) {
+    if (setting.value === "1") {
       if (product.alias_description && product.alias_description.length > 0) {
         showDisc = product.alias_description;
       } else {

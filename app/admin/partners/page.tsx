@@ -6,7 +6,7 @@ import Highlighter from "react-highlight-words";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import type { InputRef, TableColumnType, TableColumnsType } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { PartnerType } from "@/app/lib/types";
+import { CustomerType, PartnerType } from "@/app/lib/types";
 
 type DataIndex = keyof PartnerType;
 
@@ -104,6 +104,7 @@ const page = () => {
   const fetchPartners = async () => {
     setBtnLoading(true);
     const res = await fetch(`/api/admin/partners`, {
+      method: "GET",
       cache: "no-store",
     });
     if (!res.ok) {
@@ -112,16 +113,29 @@ const page = () => {
     const data = await res.json();
     setBtnLoading(false);
     setLoading(false);
-    setPartners(data.data);
+    setPartners(data);
   };
-  // console.log(partners);
+  // console.log("partners", partners);
 
-  const cancel_customer = async (record: PartnerType) => {
+  const cancel_partner = async (record: PartnerType) => {
     try {
-      const res = await axios.put(`/api/admin/customers/cancel/${record.id}`);
-      if (res.status === 200) {
-        message.success("取消合作商成功");
-        fetchPartners();
+      const res = await fetch(`/api/admin/partners/${record.id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        const res = await fetch(`/api/admin/customers/${record.clerkId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            is_partner: false,
+          }),
+        });
+        if (res.ok) {
+          message.success("取消合作商成功");
+          fetchPartners();
+        }
       }
     } catch (err) {
       // console.error(err);
@@ -147,23 +161,48 @@ const page = () => {
     },
     {
       title: "推荐码（勿多次生成）",
-      dataIndex: "referralCode",
-      key: "referralCode",
-      ...getColumnSearchProps("referralCode"),
+      dataIndex: "code",
+      key: "code",
+      ...getColumnSearchProps("code"),
     },
     {
       title: "推广注册数",
-      dataIndex: "refCount",
-      key: "refCount",
-      defaultSortOrder: "descend",
-      sorter: (a: PartnerType, b: PartnerType) => (a.refCount ?? 0) - (b.refCount ?? 0),
+      dataIndex: "customers",
+      key: "customers",
+      render: (customers: CustomerType[]) => customers.length,
+      sorter: (a, b) => (a.customers?.length ?? 0) - (b.customers?.length ?? 0),
       sortDirections: ["descend", "ascend"],
     },
     {
       title: "促成订单金额",
-      dataIndex: "totalAmount",
-      key: "totalAmount",
-      sorter: (a, b) => (a.totalAmount ?? 0) - (b.totalAmount ?? 0),
+      dataIndex: "customers",
+      key: "customers",
+      render: (customers: CustomerType[]) => {
+        const total = customers.reduce((acc, customer) => {
+          const customerTotal =
+            customer.Orders?.reduce((orderAcc, order) => orderAcc + (order.totalAmount ? order.totalAmount : 0), 0) ||
+            0;
+          return acc + customerTotal;
+        }, 0);
+        return <p>$ {total}</p>;
+      },
+      sorter: (a, b) => {
+        const totalA = a.customers?.reduce((acc, customer) => {
+          const customerTotal =
+            customer.Orders?.reduce((orderAcc, order) => orderAcc + (order.totalAmount ? order.totalAmount : 0), 0) ||
+            0;
+          return acc + customerTotal;
+        }, 0);
+
+        const totalB = b.customers?.reduce((acc, customer) => {
+          const customerTotal =
+            customer.Orders?.reduce((orderAcc, order) => orderAcc + (order.totalAmount ? order.totalAmount : 0), 0) ||
+            0;
+          return acc + customerTotal;
+        }, 0);
+
+        return (totalA as number) - (totalB as number);
+      },
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -173,7 +212,7 @@ const page = () => {
       render: (_: any, record: PartnerType) =>
         partners.length >= 1 ? (
           <div className="flex flex-col items-center gap-2">
-            <Popconfirm title="取消该合作商?" onConfirm={() => cancel_customer(record)}>
+            <Popconfirm title="取消该合作商?" onConfirm={() => cancel_partner(record)}>
               <Button type="primary" danger size="small">
                 取消该合作商
               </Button>

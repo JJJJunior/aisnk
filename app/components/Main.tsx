@@ -9,7 +9,7 @@ import { SettingsType } from "../lib/types";
 const Main = async () => {
   const websetting = await prisma.settings.findUnique({
     where: {
-      key: "websettings",
+      key: "show",
     },
   });
 
