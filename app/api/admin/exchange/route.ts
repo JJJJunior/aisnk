@@ -50,6 +50,7 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
+export const revalidate = 0;
 export const GET = async () => {
   try {
     const exchangesAndShipping = await prisma.exchangeAndShipping.findMany();
