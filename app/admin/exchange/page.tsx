@@ -37,7 +37,7 @@ const Exchange = () => {
     try {
       const res = await axios.get("/api/admin/exchange");
       if (res.status === 200) {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setExchangeFormItems(res.data.data);
         setLoading(false);
       }
