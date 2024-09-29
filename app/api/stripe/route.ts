@@ -14,9 +14,9 @@ export const POST = async (req: NextRequest) => {
     const signature = req.headers.get("Stripe-signature") as string;
     const event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET!);
 
-    const session = event.data.object as Stripe.Checkout.Session;
     switch (event.type) {
       case "checkout.session.completed":
+        const session = event.data.object as Stripe.Checkout.Session;
         // console.log("[webhooks_POST]", session);
         // 客户信息
         const customerInfo = {
@@ -136,7 +136,8 @@ export const POST = async (req: NextRequest) => {
         //   发送 email/SMS/push notification
         break;
       case "checkout.session.expired":
-        console.log(`${Date()}[checkout.session.expired]-start`, session);
+        const data = event.data.object;
+        console.log(`${Date()}[checkout.session.expired]-start`, data);
         console.log(`${Date()}[checkout.session.expired]-end`);
         break;
       default:
