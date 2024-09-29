@@ -60,7 +60,7 @@ const PayInfo = () => {
       </div>
       <div className="w-8 h-5 rounded-md bg-black">
         <svg
-          enable-background="new 0 0 780 500"
+          enableBackground="new 0 0 780 500"
           viewBox="0 0 780 500"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -74,8 +74,8 @@ const PayInfo = () => {
             y1="313.21"
             y2="313.21"
           >
-            <stop offset="0" stop-color="#007b40" />
-            <stop offset="1" stop-color="#55b330" />
+            <stop offset="0" stopColor="#007b40" />
+            <stop offset="1" stopColor="#55b330" />
           </linearGradient>
           <linearGradient
             id="b"
@@ -86,8 +86,8 @@ const PayInfo = () => {
             y1="313.21"
             y2="313.21"
           >
-            <stop offset="0" stop-color="#1d2970" />
-            <stop offset="1" stop-color="#006dba" />
+            <stop offset="0" stopColor="#1d2970" />
+            <stop offset="1" stopColor="#006dba" />
           </linearGradient>
           <linearGradient
             id="c"
@@ -98,8 +98,8 @@ const PayInfo = () => {
             y1="313.21"
             y2="313.21"
           >
-            <stop offset="0" stop-color="#6e2b2f" />
-            <stop offset="1" stop-color="#e30138" />
+            <stop offset="0" stopColor="#6e2b2f" />
+            <stop offset="1" stopColor="#e30138" />
           </linearGradient>
           <path
             d="m632.24 361.27c0 41.615-33.729 75.36-75.357 75.36h-409.13v-297.88c0-41.626 33.73-75.371 75.364-75.371h409.12l-.001 297.89z"

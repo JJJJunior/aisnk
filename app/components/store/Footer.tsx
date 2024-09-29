@@ -31,7 +31,7 @@ const Footer = async () => {
                 <p className="w-8 h-8">
                   <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                     <rect fill="#25d366" height="512" rx="15%" width="512" />
-                    <path d="m123 393 14-65a138 138 0 1 1 50 47z" fill="#25d366" stroke="#fff" stroke-width="26" />
+                    <path d="m123 393 14-65a138 138 0 1 1 50 47z" fill="#25d366" stroke="#fff" strokeWidth="26" />
                     <path
                       d="m308 273c-3-2-6-3-9 1l-12 16c-3 2-5 3-9 1-15-8-36-17-54-47-1-4 1-6 3-8l9-14c2-2 1-4 0-6l-12-29c-3-8-6-7-9-7h-8c-2 0-6 1-10 5-22 22-13 53 3 73 3 4 23 40 66 59 32 14 39 12 48 10 11-1 22-10 27-19 1-3 6-16 2-18"
                       fill="#fff"
@@ -60,18 +60,18 @@ const Footer = async () => {
                     xmlnsXlink="http://www.w3.org/1999/xlink"
                   >
                     <radialGradient id="a" cx=".4" cy="1" r="1">
-                      <stop offset=".1" stop-color="#fd5" />
-                      <stop offset=".5" stop-color="#ff543e" />
-                      <stop offset="1" stop-color="#c837ab" />
+                      <stop offset=".1" stopColor="#fd5" />
+                      <stop offset=".5" stopColor="#ff543e" />
+                      <stop offset="1" stopColor="#c837ab" />
                     </radialGradient>
                     <linearGradient id="b" x2=".2" y2="1">
-                      <stop offset=".1" stop-color="#3771c8" />
-                      <stop offset=".5" stop-color="#60f" stop-opacity="0" />
+                      <stop offset=".1" stopColor="#3771c8" />
+                      <stop offset=".5" stopColor="#60f" stopOpacity="0" />
                     </linearGradient>
                     <rect id="c" height="512" rx="15%" width="512" />
                     <use fill="url(#a)" xlinkHref="#c" />
                     <use fill="url(#b)" xlinkHref="#c" />
-                    <g fill="none" stroke="#fff" stroke-width="30">
+                    <g fill="none" stroke="#fff" strokeWidth="30">
                       <rect height="308" rx="81" width="308" x="102" y="102" />
                       <circle cx="256" cy="256" r="72" />
                       <circle cx="347" cy="165" r="6" />
@@ -87,8 +87,8 @@ const Footer = async () => {
                     xmlnsXlink="http://www.w3.org/1999/xlink"
                   >
                     <linearGradient id="a" x1="49.980476%" x2="49.980476%" y1=".000001%" y2="100.030167%">
-                      <stop offset="0" stop-color="#e52d27" />
-                      <stop offset="1" stop-color="#bf171d" />
+                      <stop offset="0" stopColor="#e52d27" />
+                      <stop offset="1" stopColor="#bf171d" />
                     </linearGradient>
                     <path d="m101.6 123.2 69.2-35.8-69.2-36.1z" fill="#fff" />
                     <path d="m101.6 51.3 60.7 40.5 8.5-4.4z" fill="#420000" opacity=".12" />
