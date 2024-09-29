@@ -102,7 +102,7 @@ export function Cart() {
     // console.log(customer);
     try {
       if (!user) {
-        router.push("/sign-in");
+        router.push("/web/sign-in");
       }
       if (exchangeAndShipping === undefined) return;
       const payData = JSON.stringify({
