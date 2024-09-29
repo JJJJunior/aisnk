@@ -46,10 +46,6 @@ const page = async ({ params }: { params: { title: string } }) => {
             <div className="flex gap-4">
               <div>aisnk001@gmail.com</div> <div>aisnk012@gmail.com</div>
             </div>
-            <div className="flex gap-4">
-              <Image src={"/wechat.png"} height={100} width={150} alt="wechat" />{" "}
-              <Image src={"/tg.png"} height={100} width={150} alt="wechat" />
-            </div>
           </div>
           <div className="flex flex-col gap-4 w-full">
             <div>Our customer service staff will answer your questions as soon as possible</div>

@@ -22,6 +22,7 @@ import useRefTracker from "@/app/lib/hooks/useRefTracker";
 import { ImageType, ProductType } from "@/app/lib/types";
 import { useSettings } from "@/app/lib/hooks/useSettings";
 import { useExchangeAndShipping } from "@/app/lib/hooks/useExchangeRate";
+import PayInfo from "./PayInfo";
 
 export function Cart() {
   const { user } = useUser();
@@ -292,6 +293,7 @@ export function Cart() {
             >
               {loading ? "loading..." : "Checkout"}
             </Button>
+            <PayInfo />
           </div>
         </SheetFooter>
       </SheetContent>
