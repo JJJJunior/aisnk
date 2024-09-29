@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest) => {
     const exchange = await prisma.exchangeAndShipping.findMany({
       select: {
         id: true,
-        courtryName: true,
+        countryName: true,
         exchangeRate: true,
         currencyCode: true,
         code: true,

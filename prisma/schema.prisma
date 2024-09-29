@@ -267,8 +267,7 @@ model ShippingAddress {
 model ExchangeAndShipping {
   id                      Int     @id @default(autoincrement())
   code                    String?
-  currency                String?
-  courtryName             String?
+  countryName             String?
   englishCoutryName       String?
   currencyCode            String?
   exchangeRate            Float?

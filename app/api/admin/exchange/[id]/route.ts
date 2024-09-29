@@ -16,7 +16,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   const {
     code,
-    courtryName,
+    countryName,
     currencyCode,
     exchangeRate,
     shippingCodeInStripe,
@@ -28,7 +28,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   } = await req.json();
   if (
     !code ||
-    !courtryName ||
+    !countryName ||
     !currencyCode ||
     !exchangeRate ||
     !shippingCodeInStripe ||
@@ -47,7 +47,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       },
       data: {
         code,
-        courtryName,
+        countryName,
         currencyCode,
         exchangeRate,
         shippingCodeInStripe,

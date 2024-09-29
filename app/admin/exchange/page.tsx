@@ -18,6 +18,7 @@ const Exchange = () => {
       if (!currentData) {
         res = await axios.post("/api/admin/exchange", values);
       } else {
+        // console.log(values);
         res = await axios.put(`/api/admin/exchange/${currentData.id}`, values);
       }
       if (res.status === 200) {
@@ -36,6 +37,7 @@ const Exchange = () => {
     try {
       const res = await axios.get("/api/admin/exchange");
       if (res.status === 200) {
+        console.log(res.data.data);
         setExchangeFormItems(res.data.data);
         setLoading(false);
       }
@@ -67,12 +69,12 @@ const Exchange = () => {
     },
     {
       title: "国家名称",
-      dataIndex: "courtyName",
-      key: "courtyName",
+      dataIndex: "countryName",
+      key: "countryName",
       render: (_: any, record: ExchangeAndShippingType) => {
         return (
           <div>
-            {record.courtryName} {record.englishCoutryName}
+            {record.countryName} {record.englishCoutryName}
           </div>
         );
       },
@@ -126,10 +128,11 @@ const Exchange = () => {
                 form.setFieldsValue({
                   id: record.id,
                   code: record.code,
-                  courtyName: record.courtryName,
+                  countryName: record.countryName,
                   englishCoutryName: record.englishCoutryName,
                   currencyCode: record.currencyCode,
                   exchangeRate: record.exchangeRate,
+                  toUSDRate: record.toUSDRate,
                   shippingCodeInStripe: record.shippingCodeInStripe,
                   shippingCodeDesInStripe: record.shippingCodeDesInStripe,
                   paymentTypeInStripe: record.paymentTypeInStripe,
@@ -164,7 +167,7 @@ const Exchange = () => {
             <Form.Item label="国家代码" name="code" rules={[{ required: true, message: "国家名称" }]}>
               <Input required />
             </Form.Item>
-            <Form.Item label="国家名称" name="courtyName" rules={[{ required: true, message: "国家名称" }]}>
+            <Form.Item label="国家名称" name="countryName" rules={[{ required: true, message: "国家名称" }]}>
               <Input />
             </Form.Item>
             <Form.Item label="英文名称" name="englishCoutryName" rules={[{ required: true, message: "国家名称" }]}>
@@ -176,7 +179,7 @@ const Exchange = () => {
             <Form.Item label="对RMB汇率" name="exchangeRate" rules={[{ required: true, message: "对人民币汇率" }]}>
               <InputNumber />
             </Form.Item>
-            <Form.Item label="对USD汇率" name="toUSDRate" rules={[{ required: true, message: "对人民币汇率" }]}>
+            <Form.Item label="对USD汇率" name="toUSDRate" rules={[{ required: true, message: "对美元汇率" }]}>
               <InputNumber />
             </Form.Item>
             <Form.Item

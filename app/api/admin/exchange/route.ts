@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   const {
     code,
-    courtryName,
+    countryName,
     currencyCode,
     exchangeRate,
     shippingCodeInStripe,
@@ -16,7 +16,7 @@ export const POST = async (req: NextRequest) => {
   } = await req.json();
   if (
     !code ||
-    !courtryName ||
+    !countryName ||
     !currencyCode ||
     !exchangeRate ||
     !shippingCodeInStripe ||
@@ -32,7 +32,7 @@ export const POST = async (req: NextRequest) => {
     await prisma.exchangeAndShipping.create({
       data: {
         code,
-        courtryName,
+        countryName,
         currencyCode,
         exchangeRate,
         shippingCodeInStripe,

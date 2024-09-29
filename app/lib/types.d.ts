@@ -156,7 +156,7 @@ export interface ExchangeAndShippingType {
   id: number;
   code?: string;
   currency?: string;
-  courtryName?: string;
+  countryName?: string;
   currencyCode?: string;
   exchangeRate?: number;
   shippingCodeInStripe?: string;
