@@ -10,9 +10,9 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: `${process.env.NEXT_PUBLIC_SITE_NAME}`,
+  title: `${process.env.NEXT_PUBLIC_SITE_NAME}-SneakerClub-Your nextone kicks`,
   description:
-    "Discover a curated selection of footwear, from comfortable everyday sneakers to exclusive limited-edition styles. We offer top brands like Nike, Vans, Converse, Adidas, Salomon, Onitsuka Tiger, ASICS, and Puma, all paired with unique accessories to elevate your style. Whether you're gearing up for casual sports or stepping out in street fashion, our collection provides the perfect match to help you express your individuality. Explore now for a seamless shopping experience and fast shipping!",
+    "SneakerClub,Your nextone kicks,unboxing kicks,discover a curated selection of footwear, from comfortable everyday sneakers to exclusive limited-edition styles. We offer top brands like Nike, Vans, Converse, Adidas, Salomon, Onitsuka Tiger, ASICS, and Puma, all paired with unique accessories to elevate your style. Whether you're gearing up for casual sports or stepping out in street fashion, our collection provides the perfect match to help you express your individuality. Explore now for a seamless shopping experience and fast shipping!",
 };
 
 export default function RootLayout({
