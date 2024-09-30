@@ -40,14 +40,14 @@ export const Navbar: React.FC<NavbarProps> = ({ sneakers, accessoires }) => {
   return (
     <div className="bg-white w-full">
       <div className="mx-auto h-20 px-6 md:px-12 lg:h-28 flex justify-between items-center lg:relative">
-        {/* Logo */}
-        <div className="text-xl hidden lg:block left-20 md:text-xl lg:text-3xl font-semibold">
-          <Link href="/web">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
-        </div>
         {/* Hamburger menu icon (visible on small screens) */}
         <button className="md:hidden text-3xl" onClick={() => setOpen(!open)}>
           {open ? "✖" : "☰"}
         </button>
+        {/* Logo */}
+        <div className="text-lg md:block md:left-20 md:text-xl lg:text-3xl font-semibold">
+          <Link href="/web">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
+        </div>
         {/* Full Navbar (visible on medium and large screens) */}
         <nav className="hidden list-none rounded-lg p-6 gap-8 lg:text-md xl:text-xl xl:gap-12 text-base font-semibold text-gray-600 md:flex md:gap-6 md:text-sm">
           <li className="text-red-500 transition duration-300 ease-in-out transform hover:text-red-200 hover:underline">

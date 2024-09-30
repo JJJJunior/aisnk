@@ -56,7 +56,7 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isOpen, onToggle }
       {/* Menu with transition */}
       <ul
         onMouseLeave={onToggle}
-        className={`w-auto mx-auto absolute z-30 bg-white shadow-lg rounded-lg flex flex-col gap-2 px-12 py-12 top-0 left-[120px] items-start md:grid md:grid-cols-6 md:gap-12 md:p-12 md:top-24 transition-all duration-300 ease-in-out transform ${
+        className={`w-auto mx-auto absolute z-30 max-h-svh overflow-auto bg-white shadow-lg rounded-lg flex flex-col gap-2 px-12 py-12 top-0 left-[120px] items-start md:grid md:grid-cols-6 md:gap-12 md:p-12 md:top-24 transition-all duration-300 ease-in-out transform ${
           isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
@@ -65,7 +65,9 @@ const MenuInNavbar: React.FC<MenuInNavbarProps> = ({ content, isOpen, onToggle }
           content.collections.map((item: CollectionType) => (
             <div key={item.id} className="flex flex-col items-center">
               <Link href={`/web/collections/${item.title?.toLowerCase()}/${item.id}`}>
-                <p className="text-sm md:text-xs text-gray-400">{CollectionShowTitle(item)}</p>
+                <p className="text-sm md:text-xs text-gray-600 md:text-gray-400 hover:text-gray-400 hover:underline md:hover:text-gray-400 md:hover:no-underline">
+                  {CollectionShowTitle(item)}
+                </p>
                 <div className="hidden md:block md:w-[120px] md:h-[80px] relative rounded-2xl transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-110">
                   <Image src={ImageUrl(item.images ? item.images : [])} fill alt="images" sizes="100vw" />
                 </div>

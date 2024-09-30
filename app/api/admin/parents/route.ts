@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async () => {
   try {
     const parents = await prisma.parent.findMany({});
-    return NextResponse.json({ parents }, { status: 200 });
+    return NextResponse.json(parents, { status: 200 });
   } catch (err) {
     console.log(err);
+    return NextResponse.json({ message: "Server Internal errors" }, { status: 500 });
   }
 };
 

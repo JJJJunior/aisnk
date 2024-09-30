@@ -36,9 +36,15 @@ const Parents = () => {
 
   const getParents = async () => {
     try {
-      const res = await axios.get("/api/admin/parents");
-      if (res.status === 200) {
-        setParents(res.data.data);
+      const res = await fetch("/api/admin/parents", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setParents(data);
         setLoading(false);
       }
     } catch (err) {
@@ -49,7 +55,6 @@ const Parents = () => {
   useEffect(() => {
     getParents();
   }, []);
-
   const handleDelete = async (record: ParentType) => {
     console.log("handleDelete");
     try {
